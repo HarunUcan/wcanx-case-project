@@ -1,0 +1,16 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: wcanx_mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpass
+      MONGO_INITDB_DATABASE: wcanx_budget
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
