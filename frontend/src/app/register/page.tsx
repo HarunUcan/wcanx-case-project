@@ -1,34 +1,104 @@
-import AuthHeader from '@/components/auth/AuthHeader'
-import AuthSwitch from '@/components/auth/AuthSwitch'
-import RegisterLeftArea from '@/components/auth/RegisterLeftArea'
-import Button from '@/components/ui/button'
-import Input from '@/components/ui/input'
-import React from 'react'
+'use client';
+
+import AuthHeader from '@/components/auth/AuthHeader';
+import AuthSwitch from '@/components/auth/AuthSwitch';
+import RegisterLeftArea from '@/components/auth/RegisterLeftArea';
+import Button from '@/components/ui/button';
+import Input from '@/components/ui/input';
+import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { authService } from '@/services/auth.service';
+import { useAuth } from '@/context/AuthContext';
 
 function RegisterPage() {
+    const router = useRouter();
+    const { isAuthenticated, isReady } = useAuth();
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [success, setSuccess] = useState<string | null>(null);
+
+    // zaten giriş yapıldıysa register ekranına sokma
+    useEffect(() => {
+        if (!isReady) return;
+        if (isAuthenticated) router.replace('/dashboard');
+    }, [isAuthenticated, isReady, router]);
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setError(null);
+        setSuccess(null);
+        setLoading(true);
+
+        try {
+            const fd = new FormData(e.currentTarget);
+            const email = String(fd.get('email') ?? '').trim();
+            const password = String(fd.get('password') ?? '');
+
+            if (!email || !password) {
+                setError('E-posta ve şifre zorunludur.');
+                return;
+            }
+
+            await authService.register({ email, password });
+
+            setSuccess('Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...');
+            router.replace('/login');
+        } catch (err: any) {
+            setError(err?.response?.data?.message ?? 'Kayıt başarısız. Bilgilerinizi kontrol edin.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="flex min-h-full w-full lg:w-4/5 mx-auto mt-4 lg:border lg:border-green-950 rounded-4xl justify-center overflow-hidden">
             <RegisterLeftArea />
-            <div className='w-full lg:w-1/2 py-12'>
+            <div className="w-full lg:w-1/2 py-12">
                 <AuthHeader name="Hesap Oluştur" color="green" />
 
                 <div className="mt-10 sm:mx-auto px-12">
-                    <form action="#" method="POST" className="space-y-6">
+                    <form className="space-y-6" onSubmit={handleSubmit}>
+                        {error && (
+                            <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                                {error}
+                            </div>
+                        )}
 
-                        <Input id="email" type="email" name="E-Posta" required autoComplete="email" className="" placeHolderName='ex@example.com' />
+                        {success && (
+                            <div className="rounded-md border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                                {success}
+                            </div>
+                        )}
 
-                        <Input id="password" type="password" name="Şifre" required autoComplete="current-password" className="" placeHolderName='••••••••' />
+                        <Input
+                            id="email"
+                            type="email"
+                            name="E-Posta"
+                            required
+                            autoComplete="email"
+                            className=""
+                            placeHolderName="ex@example.com"
+                        />
 
-                        <Button name="Kayıt Ol" />
+                        <Input
+                            id="password"
+                            type="password"
+                            name="Şifre"
+                            required
+                            autoComplete="current-password"
+                            className=""
+                            placeHolderName="••••••••"
+                        />
 
+                        <Button name={loading ? 'Kayıt Olunuyor…' : 'Kayıt Ol'} />
                     </form>
 
                     <AuthSwitch isLogin={false} />
                 </div>
             </div>
-
         </div>
-    )
+    );
 }
 
-export default RegisterPage
+export default RegisterPage;
