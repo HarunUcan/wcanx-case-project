@@ -1,0 +1,189 @@
+'use client';
+
+import { Protected } from '@/components/layout/Protected';
+import MonthPicker from '@/components/ui/MonthPicker';
+import { FaPlus } from 'react-icons/fa6';
+
+import InfoCard, { CardType } from '@/components/dashboard/InfoCard';
+import { ExpenseDistributionCard } from '@/components/dashboard/ExpenseDistributionCard';
+import { MonthlyIncomeExpenseCard } from '@/components/dashboard/MonthlyIncomeExpenseCard';
+
+import React, { useEffect, useMemo, useState } from 'react';
+import { dashboardService } from '@/services/dashboard.service';
+
+const CATEGORY_COLORS = [
+    '#2fd37a',
+    '#3b82f6',
+    '#f59e0b',
+    '#ec4899',
+    '#64748b',
+    '#22c55e',
+    '#ef4444',
+];
+
+function toYYYYMM(d: Date) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    return `${y}-${m}`;
+}
+
+function formatMonthNameTR(yyyyMm: string) {
+    const [y, m] = yyyyMm.split('-').map(Number);
+    const date = new Date(y, (m ?? 1) - 1, 1);
+    return date.toLocaleDateString('tr-TR', { month: 'long' });
+}
+
+export default function DashboardPage() {
+    const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
+    const [summary, setSummary] = useState<{
+        totalIncome: number;
+        totalExpense: number;
+        balance: number;
+    } | null>(null);
+
+    // Yıllık seri 
+    const [incomeExpenseRows, setIncomeExpenseRows] = useState<
+        Array<{ month: string; income: number; expense: number }>
+    >([]);
+
+    // ExpenseDistributionCard -> DonutItem[] bekliyor (color zorunlu)
+    const [expenseByCategory, setExpenseByCategory] = useState<
+        Array<{ name: string; value: number; color: string }>
+    >([]);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    const selectedMonth = useMemo(() => toYYYYMM(selectedDate), [selectedDate]);
+    const selectedYear = useMemo(() => selectedDate.getFullYear(), [selectedDate]);
+
+    // UI: "Seçili ayın karşılaştırması" -> summary'den tek bar üret
+    const chartData = useMemo(() => {
+        const monthName = formatMonthNameTR(selectedMonth);
+        return [
+            {
+                name: monthName.charAt(0).toUpperCase() + monthName.slice(1),
+                income: summary?.totalIncome ?? 0,
+                expense: summary?.totalExpense ?? 0,
+            },
+        ];
+    }, [selectedMonth, summary]);
+
+    useEffect(() => {
+        let cancelled = false;
+
+        async function load() {
+            setLoading(true);
+            setError(null);
+
+            try {
+                const [s, yearly, byCat] = await Promise.all([
+                    dashboardService.getSummary(selectedMonth),
+                    dashboardService.getIncomeExpense(selectedYear),
+                    dashboardService.getExpenseByCategory(selectedMonth),
+                ]);
+
+                if (cancelled) return;
+
+                setSummary({
+                    totalIncome: s.totalIncome,
+                    totalExpense: s.totalExpense,
+                    balance: s.balance,
+                });
+
+                setIncomeExpenseRows(yearly);
+
+                // color zorunlu: frontend'te garanti ediyoruz
+                setExpenseByCategory(
+                    byCat.map((x, index) => ({
+                        name: x.category,
+                        value: x.amount,
+                        color: CATEGORY_COLORS[index % CATEGORY_COLORS.length],
+                    })),
+                );
+            } catch (e: any) {
+                if (cancelled) return;
+                setError(e?.response?.data?.message ?? 'Dashboard verileri alınamadı.');
+            } finally {
+                if (!cancelled) setLoading(false);
+            }
+        }
+
+        load();
+        return () => {
+            cancelled = true;
+        };
+    }, [selectedMonth, selectedYear]);
+
+    return (
+        <Protected>
+            <div className="px-30">
+                {/* Üst Bilgi Alanı*/}
+                <div className="flex justify-between mt-8">
+                    <div className="flex flex-col">
+                        <span className="text-2xl font-bold text-gray-800">Finansal Durum</span>
+                        <span className="text-gray-600">Bu ayki harcamalarının özeti</span>
+                    </div>
+
+                    <MonthPicker
+                        initialDate={selectedDate}
+                        onChange={(d) => setSelectedDate(d)}
+                    />
+
+                    <button className="font-semibold rounded-full px-6 bg-green-400 cursor-pointer h-12">
+                        <span className="flex justify-center items-center gap-1">
+                            <FaPlus />
+                            <span>Yeni İşlem Ekle</span>
+                        </span>
+                    </button>
+                </div>
+
+                {error && (
+                    <div className="mt-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                        {error}
+                    </div>
+                )}
+
+                {/* Finansal Bilgi Kartları*/}
+                <div className="flex justify-center items-center gap-8 mt-12">
+                    <InfoCard
+                        title="Toplam Gelir"
+                        amount={summary?.totalIncome ?? 0}
+                        percentage=""
+                        cardType={CardType.INCOME}
+                    />
+                    <InfoCard
+                        title="Toplam Gider"
+                        amount={summary?.totalExpense ?? 0}
+                        percentage=""
+                        cardType={CardType.EXPEND}
+                    />
+                    <InfoCard
+                        title="Net Bakiye"
+                        amount={summary?.balance ?? 0}
+                        percentage=""
+                        cardType={CardType.TOTAL}
+                    />
+                </div>
+
+                {/* Grafik Kartları */}
+                <div className="flex justify-center items-center gap-8 mt-12 mb-16">
+                    <MonthlyIncomeExpenseCard
+                        title="Aylık Gelir vs Gider"
+                        subtitle="Seçili ayın karşılaştırması"
+                        chartData={chartData}
+                        chartHeight={300}
+                    />
+
+                    <ExpenseDistributionCard
+                        title="Gider Dağılımı"
+                        subtitle="Kategorilere göre"
+                        data={expenseByCategory}
+                    />
+                </div>
+
+            </div>
+        </Protected>
+    );
+}
