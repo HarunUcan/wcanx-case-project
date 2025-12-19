@@ -7,7 +7,7 @@ export type BarChartData = {
 type TransactionType = 'Gelir' | 'Gider';
 
 export type Transaction = {
-    id: number;
+    id: string;
     type: TransactionType;
     category: string;
     date: string;

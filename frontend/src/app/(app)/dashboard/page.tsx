@@ -11,6 +11,7 @@ import { MonthlyIncomeExpenseCard } from '@/components/dashboard/MonthlyIncomeEx
 import React, { useEffect, useMemo, useState } from 'react';
 import { dashboardService } from '@/services/dashboard.service';
 import AddTransactionModal from '@/components/transactions/AddTransactionModal';
+import { transactionsService } from '@/services/transactions.service';
 
 const CATEGORY_COLORS = [
     '#2fd37a',
@@ -43,7 +44,7 @@ export default function DashboardPage() {
         balance: number;
     } | null>(null);
 
-    // Yıllık seri 
+    // Yıllık seri
     const [incomeExpenseRows, setIncomeExpenseRows] = useState<
         Array<{ month: string; income: number; expense: number }>
     >([]);
@@ -145,6 +146,49 @@ export default function DashboardPage() {
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    // Dashboard'dan işlem ekleme: POST + dashboard refresh
+    const handleCreateTransaction = async (data: {
+        type: 'expense' | 'income';
+        amount: number;
+        category: string;
+        date: string;
+        note?: string;
+    }) => {
+        setError(null);
+        try {
+            await transactionsService.create(data);
+
+            // ekleme başarılı -> modal kapat
+            setIsModalOpen(false);
+
+            // verileri yenilemek için aynı load mantığını tekrar çalıştır:
+            // burada useEffect içindeki load'u kopyalamadan, kısa yoldan aynı 3 isteği tekrar atıyoruz
+            const [s, yearly, byCat] = await Promise.all([
+                dashboardService.getSummary(selectedMonth),
+                dashboardService.getIncomeExpense(selectedYear),
+                dashboardService.getExpenseByCategory(selectedMonth),
+            ]);
+
+            setSummary({
+                totalIncome: s.totalIncome,
+                totalExpense: s.totalExpense,
+                balance: s.balance,
+            });
+
+            setIncomeExpenseRows(yearly);
+
+            setExpenseByCategory(
+                byCat.map((x, index) => ({
+                    name: x.category,
+                    value: x.amount,
+                    color: CATEGORY_COLORS[index % CATEGORY_COLORS.length],
+                })),
+            );
+        } catch (e: any) {
+            setError(e?.response?.data?.message ?? 'İşlem eklenemedi.');
+        }
+    };
+
     return (
         <Protected>
             <div className="px-30">
@@ -155,12 +199,12 @@ export default function DashboardPage() {
                         <span className="text-gray-600">Bu ayki harcamalarının özeti</span>
                     </div>
 
-                    <MonthPicker
-                        initialDate={selectedDate}
-                        onChange={(d) => setSelectedDate(d)}
-                    />
+                    <MonthPicker initialDate={selectedDate} onChange={(d) => setSelectedDate(d)} />
 
-                    <button onClick={() => setIsModalOpen(true)} className="font-semibold rounded-full px-6 bg-green-400 cursor-pointer h-12">
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="font-semibold rounded-full px-6 bg-green-400 cursor-pointer h-12"
+                    >
                         <span className="flex justify-center items-center gap-1">
                             <FaPlus />
                             <span>Yeni İşlem Ekle</span>
@@ -172,7 +216,7 @@ export default function DashboardPage() {
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
                     onSave={(data) => {
-                        console.log("Kaydedilen Veri:", data);
+                        handleCreateTransaction(data);
                     }}
                 />
 
@@ -184,24 +228,9 @@ export default function DashboardPage() {
 
                 {/* Finansal Bilgi Kartları*/}
                 <div className="flex justify-center items-center gap-8 mt-12">
-                    <InfoCard
-                        title="Toplam Gelir"
-                        amount={summary?.totalIncome ?? 0}
-                        percentage=""
-                        cardType={CardType.INCOME}
-                    />
-                    <InfoCard
-                        title="Toplam Gider"
-                        amount={summary?.totalExpense ?? 0}
-                        percentage=""
-                        cardType={CardType.EXPEND}
-                    />
-                    <InfoCard
-                        title="Net Bakiye"
-                        amount={summary?.balance ?? 0}
-                        percentage=""
-                        cardType={CardType.TOTAL}
-                    />
+                    <InfoCard title="Toplam Gelir" amount={summary?.totalIncome ?? 0} percentage="" cardType={CardType.INCOME} />
+                    <InfoCard title="Toplam Gider" amount={summary?.totalExpense ?? 0} percentage="" cardType={CardType.EXPEND} />
+                    <InfoCard title="Net Bakiye" amount={summary?.balance ?? 0} percentage="" cardType={CardType.TOTAL} />
                 </div>
 
                 {/* Grafik Kartları */}
@@ -213,13 +242,8 @@ export default function DashboardPage() {
                         chartHeight={300}
                     />
 
-                    <ExpenseDistributionCard
-                        title="Gider Dağılımı"
-                        subtitle="Kategorilere göre"
-                        data={expenseByCategory}
-                    />
+                    <ExpenseDistributionCard title="Gider Dağılımı" subtitle="Kategorilere göre" data={expenseByCategory} />
                 </div>
-
             </div>
         </Protected>
     );
