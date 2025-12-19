@@ -10,6 +10,7 @@ import { MonthlyIncomeExpenseCard } from '@/components/dashboard/MonthlyIncomeEx
 
 import React, { useEffect, useMemo, useState } from 'react';
 import { dashboardService } from '@/services/dashboard.service';
+import AddTransactionModal from '@/components/transactions/AddTransactionModal';
 
 const CATEGORY_COLORS = [
     '#2fd37a',
@@ -70,6 +71,32 @@ export default function DashboardPage() {
         ];
     }, [selectedMonth, summary]);
 
+    const yearlyChartData = useMemo(() => {
+        // Gelen veriyi hızlı lookup için map'e çevir
+        const byMonth = new Map<string, { income: number; expense: number }>();
+        for (const r of incomeExpenseRows) {
+            byMonth.set(r.month, { income: r.income ?? 0, expense: r.expense ?? 0 });
+        }
+
+        // Seçili yılın 12 ayını üret (YYYY-01 ... YYYY-12)
+        const months = Array.from({ length: 12 }, (_, i) => {
+            const mm = String(i + 1).padStart(2, '0');
+            return `${selectedYear}-${mm}`;
+        });
+
+        // Her ay için veri varsa kullan, yoksa 0 bas
+        return months.map((yyyyMm) => {
+            const monthName = formatMonthNameTR(yyyyMm);
+            const found = byMonth.get(yyyyMm);
+
+            return {
+                name: monthName.charAt(0).toUpperCase() + monthName.slice(1),
+                income: found?.income ?? 0,
+                expense: found?.expense ?? 0,
+            };
+        });
+    }, [incomeExpenseRows, selectedYear]);
+
     useEffect(() => {
         let cancelled = false;
 
@@ -116,6 +143,8 @@ export default function DashboardPage() {
         };
     }, [selectedMonth, selectedYear]);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     return (
         <Protected>
             <div className="px-30">
@@ -131,13 +160,21 @@ export default function DashboardPage() {
                         onChange={(d) => setSelectedDate(d)}
                     />
 
-                    <button className="font-semibold rounded-full px-6 bg-green-400 cursor-pointer h-12">
+                    <button onClick={() => setIsModalOpen(true)} className="font-semibold rounded-full px-6 bg-green-400 cursor-pointer h-12">
                         <span className="flex justify-center items-center gap-1">
                             <FaPlus />
                             <span>Yeni İşlem Ekle</span>
                         </span>
                     </button>
                 </div>
+
+                <AddTransactionModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    onSave={(data) => {
+                        console.log("Kaydedilen Veri:", data);
+                    }}
+                />
 
                 {error && (
                     <div className="mt-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -172,7 +209,7 @@ export default function DashboardPage() {
                     <MonthlyIncomeExpenseCard
                         title="Aylık Gelir vs Gider"
                         subtitle="Seçili ayın karşılaştırması"
-                        chartData={chartData}
+                        chartData={yearlyChartData}
                         chartHeight={300}
                     />
 

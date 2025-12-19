@@ -19,7 +19,7 @@ type SimpleBarChartProps = {
 
 export default function SimpleBarChart({
     data,
-    width = "60%",
+    width = "100%",
     height = "100%",
 }: SimpleBarChartProps) {
     return (
@@ -30,8 +30,8 @@ export default function SimpleBarChart({
                     <XAxis dataKey="name" />
                     <YAxis />
                     <Tooltip />
-                    <Bar dataKey="income" fill="#22c55e" radius={[6, 6, 0, 0]} />
-                    <Bar dataKey="expense" fill="#ef4444" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="income" name={"Gelir"} fill="#22c55e" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="expense" name={"Gider"} fill="#ef4444" radius={[6, 6, 0, 0]} />
                 </BarChart>
             </ResponsiveContainer>
         </div>

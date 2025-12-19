@@ -16,12 +16,12 @@ function PanelNavbar() {
                     <div className=''>
                         <ul className='flex gap-8 font-semibold text-gray-800'>
                             <li><Link href={"/dashboard"} className='text-gray-900 border-b-2 border-green-600 transition duration:300'>Dashboard</Link></li>
-                            <li><Link href={"/transection"} className='hover:text-gray-900'>İşlemler</Link></li>
+                            <li><Link href={"/transactions"} className='hover:text-gray-900'>İşlemler</Link></li>
                         </ul>
                     </div>
 
-                    <div className='flex justify-center items-center gap-4'>
-                        <div className='flex justify-center items-center gap-1'>
+                    <div className='flex justify-center items-center gap-2'>
+                        <div className='flex justify-center items-center gap-1 mr-2'>
                             <div className='flex justify-center items-center w-8 h-8 rounded-full border-2 font-semibold border-orange-400 bg-gray-300'>A</div>
                             <div className='flex flex-col'>
                                 <span className='text-xs'>Hoşgeldin</span>

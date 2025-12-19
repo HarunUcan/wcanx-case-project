@@ -3,3 +3,13 @@ export type BarChartData = {
     income: number;
     expense: number;
 };
+
+type TransactionType = 'Gelir' | 'Gider';
+
+export type Transaction = {
+    id: number;
+    type: TransactionType;
+    category: string;
+    date: string;
+    amount: number;
+}
