@@ -20,12 +20,30 @@ export class TransactionsService {
         });
     }
 
-    async findAllByUser(userId: string) {
+    async findAllByUser(userId: string, month?: string) {
+        const filter: any = {
+            userId: new Types.ObjectId(userId),
+        };
+
+        if (month) {
+            // month: "2025-12"
+            const [year, m] = month.split('-').map(Number);
+
+            const start = new Date(year, m - 1, 1);
+            const end = new Date(year, m, 1); // bir sonraki ayın 1'i
+
+            filter.date = {
+                $gte: start,
+                $lt: end,
+            };
+        }
+
         return this.transactionModel
-            .find({ userId: new Types.ObjectId(userId) })
+            .find(filter)
             .sort({ date: -1 })
             .exec();
     }
+
 
     async remove(userId: string, transactionId: string) {
         const transaction = await this.transactionModel.findById(transactionId);

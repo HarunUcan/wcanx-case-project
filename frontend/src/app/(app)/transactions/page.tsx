@@ -17,6 +17,13 @@ function formatDateTR(iso: string) {
     return d.toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' });
 }
 
+function getCurrentMonth(): string {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    return `${y}-${m}`; // YYYY-MM
+}
+
 function TransactionsPage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -35,7 +42,7 @@ function TransactionsPage() {
         setLoading(true);
         setError(null);
         try {
-            const data = await transactionsService.list();
+            const data = await transactionsService.list(filters.month ?? undefined);
             setRaw(data);
         } catch (e: any) {
             setError(e?.response?.data?.message ?? 'İşlemler alınamadı.');
@@ -87,11 +94,36 @@ function TransactionsPage() {
     };
 
 
+    type TransactionFilterType = 'all' | 'income' | 'expense';
+
+    const [filters, setFilters] = useState<{
+        month: string | null;      // YYYY-MM
+        type: TransactionFilterType;
+        category: string | null;
+        search: string;
+    }>({
+        month: getCurrentMonth(),
+        type: 'all',
+        category: null,
+        search: '',
+    });
+
+    const categories = useMemo(() => {
+        const set = new Set<string>();
+
+        raw.forEach((t) => {
+            if (t.category) set.add(t.category);
+        });
+
+        return ['Tümü', ...Array.from(set).sort()];
+    }, [raw]);
+
+
 
     useEffect(() => {
         loadTransactions();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [filters.month]);
 
     const tableTransactions: Transaction[] = useMemo(() => {
         return raw.map((t) => {
@@ -103,11 +135,48 @@ function TransactionsPage() {
                 type,
                 category: t.category,
                 note: t.note,
-                date: formatDateTR(t.date),
+                date: formatDateTR(t.date),      // UI
+                isoDate: t.date,                // filtreleme için ham ISO
                 amount,
             };
         });
     }, [raw]);
+
+
+    const filteredTransactions = useMemo(() => {
+        return tableTransactions.filter((t) => {
+            // Tür
+            if (filters.type !== 'all') {
+                if (filters.type === 'income' && t.type !== 'Gelir') return false;
+                if (filters.type === 'expense' && t.type !== 'Gider') return false;
+            }
+
+            // Kategori
+            if (filters.category && t.category !== filters.category) {
+                return false;
+            }
+
+            // Arama
+            if (
+                filters.search &&
+                !(
+                    t.category.toLowerCase().includes(filters.search.toLowerCase()) ||
+                    (t.note ?? '').toLowerCase().includes(filters.search.toLowerCase())
+                )
+            ) {
+                return false;
+            }
+
+            // Tarih (YYYY-MM)
+            if (filters.month) {
+                const month = t.isoDate.slice(0, 7);
+                if (month !== filters.month) return false;
+            }
+
+            return true;
+        });
+    }, [tableTransactions, filters]);
+
 
     //  Silme işlemi
     const requestDelete = (id: string) => {
@@ -156,7 +225,11 @@ function TransactionsPage() {
                 </div>
 
                 <div className="mt-12">
-                    <FilterBar />
+                    <FilterBar
+                        filters={filters}
+                        categories={categories}
+                        onChange={setFilters}
+                    />
                 </div>
 
                 {error && (
@@ -167,17 +240,11 @@ function TransactionsPage() {
 
                 <div className="mt-4 mb-20">
                     <TransactionTable
-                        transactions={tableTransactions}
+                        transactions={filteredTransactions}
                         onDelete={requestDelete}
                         onEdit={handleEditOpen}
                     />
                 </div>
-
-                <AddTransactionModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    onSave={handleCreate}
-                />
 
             </div>
 
@@ -192,6 +259,12 @@ function TransactionsPage() {
                     setPendingDeleteId(null);
                 }}
                 onConfirm={confirmDelete}
+            />
+
+            <AddTransactionModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSave={handleCreate}
             />
 
             <EditTransactionModal

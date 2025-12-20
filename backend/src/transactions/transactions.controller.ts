@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Patch, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Patch, UseGuards, Query } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
@@ -21,8 +21,11 @@ export class TransactionsController {
     }
 
     @Get()
-    findAll(@CurrentUser() user: CurrentUserPayload) {
-        return this.transactionsService.findAllByUser(user.userId);
+    findAll(
+        @CurrentUser() user: CurrentUserPayload,
+        @Query('month') month?: string, // YYYY-MM
+    ) {
+        return this.transactionsService.findAllByUser(user.userId, month);
     }
 
     @Delete(':id')

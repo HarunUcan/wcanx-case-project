@@ -30,8 +30,10 @@ export type UpdateTransactionRequest = {
 };
 
 export const transactionsService = {
-    async list() {
-        const res = await api.get<TransactionDto[]>('/transactions');
+    async list(month?: string) {
+        const res = await api.get('/transactions', {
+            params: month ? { month } : undefined,
+        });
         return res.data;
     },
 

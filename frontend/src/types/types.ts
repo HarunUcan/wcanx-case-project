@@ -11,6 +11,7 @@ export type Transaction = {
     type: TransactionType;
     category: string;
     date: string;
+    isoDate: string;   // filtreleme için (YYYY-MM-DD)
     amount: number;
     note?: string;
 }

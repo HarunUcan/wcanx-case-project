@@ -4,46 +4,84 @@ import {
     LuFilter,
     LuLayers,
     LuSearch,
-    LuChevronDown
 } from "react-icons/lu";
 
-const FilterBar: React.FC = () => {
+interface FilterBarProps {
+    filters: {
+        month: string | null;
+        type: 'all' | 'income' | 'expense';
+        category: string | null;
+        search: string;
+    };
+    categories: string[];
+    onChange: (filters: FilterBarProps['filters']) => void;
+}
+
+const FilterBar: React.FC<FilterBarProps> = ({ filters, categories, onChange }) => {
     return (
         <div className="flex items-center justify-between bg-white p-4 rounded-3xl border border-gray-100 shadow-sm w-full gap-4">
 
-            {/* Sol Taraf: Filtreler */}
+            {/* Sol Taraf */}
             <div className="flex items-center gap-3">
 
-                {/* Tarih Filtresi */}
-                <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors cursor-pointer group">
-                    <LuCalendar className="text-gray-400 group-hover:text-blue-500" size={18} />
-                    <span className="text-sm font-bold text-gray-700">Ekim 2023</span>
-                    <LuChevronDown className="text-gray-400" size={16} />
-                </button>
+                {/* Tarih */}
+                <div className="relative">
+                    <LuCalendar className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+                    <input
+                        type="month"
+                        value={filters.month ?? ''}
+                        onChange={(e) =>
+                            onChange({ ...filters, month: e.target.value || null })
+                        }
+                        className="pl-10 pr-4 py-2 border border-gray-200 rounded-full text-sm font-bold cursor-pointer"
+                    />
+                </div>
 
-                {/* Tür Filtresi */}
-                <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors cursor-pointer group">
-                    <LuFilter className="text-gray-400 group-hover:text-blue-500" size={18} />
-                    <span className="text-sm font-bold text-gray-700 whitespace-nowrap">Tür: Tümü</span>
-                    <LuChevronDown className="text-gray-400" size={16} />
-                </button>
+                {/* Tür */}
+                <select
+                    value={filters.type}
+                    onChange={(e) =>
+                        onChange({ ...filters, type: e.target.value as any })
+                    }
+                    className="px-4 py-2 border border-gray-200 rounded-full text-sm font-bold cursor-pointer"
+                >
+                    <option value="all">Tür: Tümü</option>
+                    <option value="income">Gelir</option>
+                    <option value="expense">Gider</option>
+                </select>
 
-                {/* Kategori Filtresi */}
-                <button className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full hover:bg-gray-50 transition-colors cursor-pointer group">
-                    <LuLayers className="text-gray-400 group-hover:text-blue-500" size={18} />
-                    <span className="text-sm font-bold text-gray-700 whitespace-nowrap">Kategori: Tümü</span>
-                    <LuChevronDown className="text-gray-400" size={16} />
-                </button>
+                {/* Kategori */}
+                <select
+                    value={filters.category ?? 'Tümü'}
+                    onChange={(e) =>
+                        onChange({
+                            ...filters,
+                            category: e.target.value === 'Tümü' ? null : e.target.value,
+                        })
+                    }
+                    className="px-4 py-2 border border-gray-200 rounded-full text-sm font-bold cursor-pointer"
+                >
+                    {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                            {cat === 'Tümü' ? 'Kategori: Tümü' : cat}
+                        </option>
+                    ))}
+                </select>
+
 
             </div>
 
-            {/* Sağ Taraf: Arama Inputu */}
+            {/* Sağ Taraf: Arama */}
             <div className="relative flex-1 max-w-md">
                 <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                     <LuSearch className="text-blue-500" size={20} />
                 </div>
                 <input
                     type="text"
+                    value={filters.search}
+                    onChange={(e) =>
+                        onChange({ ...filters, search: e.target.value })
+                    }
                     placeholder="Ara..."
                     className="w-full pl-12 pr-4 py-2.5 bg-gray-50/50 border border-gray-200 rounded-full text-sm outline-none focus:border-blue-400 focus:bg-white transition-all placeholder:text-gray-400 font-medium"
                 />

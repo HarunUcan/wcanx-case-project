@@ -212,14 +212,6 @@ export default function DashboardPage() {
                     </button>
                 </div>
 
-                <AddTransactionModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    onSave={(data) => {
-                        handleCreateTransaction(data);
-                    }}
-                />
-
                 {error && (
                     <div className="mt-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                         {error}
@@ -245,6 +237,14 @@ export default function DashboardPage() {
                     <ExpenseDistributionCard title="Gider Dağılımı" subtitle="Kategorilere göre" data={expenseByCategory} />
                 </div>
             </div>
+
+            <AddTransactionModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSave={(data) => {
+                    handleCreateTransaction(data);
+                }}
+            />
         </Protected>
     );
 }
