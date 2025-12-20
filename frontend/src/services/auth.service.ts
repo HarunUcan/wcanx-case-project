@@ -1,9 +1,9 @@
 import { api } from './api';
 
-export type RegisterRequest = { email: string; password: string };
-export type LoginRequest = { email: string; password: string };
+export type RegisterRequest = { email: string; password: string; firstName: string; lastName: string; };
+export type LoginRequest = { email: string; password: string; };
 export type LoginResponse = { accessToken: string };
-export type RegisterResponse = { id: string; email: string };
+export type RegisterResponse = { id: string; email: string; firstName: string; lastName: string; };
 
 export const authService = {
     async register(data: RegisterRequest) {

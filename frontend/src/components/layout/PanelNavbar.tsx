@@ -5,6 +5,7 @@ import { MdLogout, MdMenu, MdClose } from "react-icons/md"; // Menu ikonları ek
 import { FaRegMoon } from "react-icons/fa";
 import { usePathname, useRouter } from 'next/navigation';
 import { authService } from '@/services/auth.service';
+import { useAuth } from '@/context/AuthContext';
 
 function PanelNavbar() {
     const router = useRouter();
@@ -19,6 +20,8 @@ function PanelNavbar() {
     const isActive = (path: string) => {
         return pathName.startsWith(path);
     };
+
+    const { user } = useAuth();
 
     return (
         <header className="bg-white 2xl:py-8 border-b border-gray-200 sticky top-0 z-50">
@@ -71,19 +74,19 @@ function PanelNavbar() {
                         {/* Kullanıcı Bilgisi (Telefonda yazıyı gizle 'hidden sm:flex') */}
                         <div className='flex items-center gap-2 2xl:mr-16'>
                             <div className='flex justify-center items-center w-8 2xl:w-12 h-8 2xl:h-12 rounded-full border-2 font-semibold border-orange-400 bg-gray-100 text-sm 2xl:text-2xl'>
-                                A
+                                {user?.firstName[0]}
                             </div>
                             <div className='hidden sm:flex flex-col'>
                                 <span className='text-[10px] 2xl:text-lg text-gray-500 leading-tight'>Hoşgeldin</span>
-                                <span className='text-xs 2xl:text-2xl font-bold text-gray-700 leading-tight'>Ahmet Y.</span>
+                                <span className='text-xs 2xl:text-2xl font-bold text-gray-700 leading-tight'>{user?.firstName} {user?.lastName[0]}.</span>
                             </div>
                         </div>
 
                         {/* Aksiyon Butonları */}
-                        <button className='p-1 rounded-full hover:bg-gray-100 transition'>
+                        <button className='p-1 rounded-full hover:bg-gray-100 transition cursor-pointer'>
                             <FaRegMoon className='text-gray-600 2xl:text-3xl' />
                         </button>
-                        <button onClick={handleLogout} className='p-1 rounded-full hover:bg-red-50 transition group'>
+                        <button onClick={handleLogout} className='p-1 rounded-full hover:bg-red-50 transition group cursor-pointer'>
                             <MdLogout className="text-xl 2xl:text-3xl text-gray-600 group-hover:text-red-600 transition duration-200" />
                         </button>
 

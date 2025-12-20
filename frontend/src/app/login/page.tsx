@@ -69,11 +69,9 @@ function LoginPage() {
                             id="email"
                             type="email"
                             name="E-Posta"
+                            fieldName="email"
                             required
                             autoComplete="email"
-                            // 2xl:h-16 -> Input yüksekliği artırıldı
-                            // 2xl:text-xl -> Yazı boyutu büyütüldü
-                            // 2xl:px-6 -> Input iç boşluğu artırıldı
                             className="h-11 2xl:h-13 2xl:text-xl 2xl:px-6"
                             placeHolderName="ex@example.com"
                         />
@@ -82,6 +80,7 @@ function LoginPage() {
                             id="password"
                             type="password"
                             name="Şifre"
+                            fieldName="password"
                             required
                             autoComplete="current-password"
                             className="h-11 2xl:h-13 2xl:text-xl 2xl:px-6"

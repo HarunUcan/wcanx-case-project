@@ -34,13 +34,15 @@ function RegisterPage() {
             const fd = new FormData(e.currentTarget);
             const email = String(fd.get('email') ?? '').trim();
             const password = String(fd.get('password') ?? '');
+            const firstName = String(fd.get('firstName') ?? '').trim();
+            const lastName = String(fd.get('lastName') ?? '').trim();
 
-            if (!email || !password) {
-                setError('E-posta ve şifre zorunludur.');
+            if (!firstName || !lastName || !email || !password) {
+                setError('Ad, soyad, e-posta ve şifre zorunludur.');
                 return;
             }
 
-            await authService.register({ email, password });
+            await authService.register({ email: email, password: password, firstName: firstName, lastName: lastName });
 
             setSuccess('Kayıt başarılı! Giriş sayfasına yönlendiriliyorsunuz...');
             router.replace('/login');
@@ -72,15 +74,30 @@ function RegisterPage() {
                         )}
 
                         <Input
+                            id="firstName"
+                            type="text"
+                            name="Ad"
+                            fieldName="firstName"
+                            required
+                            placeHolderName="John"
+                        />
+
+                        <Input
+                            id="lastName"
+                            type="text"
+                            name="Soyad"
+                            fieldName="lastName"
+                            required
+                            placeHolderName="Doe"
+                        />
+
+                        <Input
                             id="email"
                             type="email"
                             name="E-Posta"
+                            fieldName="email"
                             required
                             autoComplete="email"
-                            // 2xl:h-16 -> Input yüksekliği artırıldı
-                            // 2xl:text-xl -> Yazı boyutu büyütüldü
-                            // 2xl:px-6 -> Input iç boşluğu artırıldı
-                            className="h-11 2xl:h-13 2xl:text-xl 2xl:px-6"
                             placeHolderName="ex@example.com"
                         />
 
@@ -88,11 +105,12 @@ function RegisterPage() {
                             id="password"
                             type="password"
                             name="Şifre"
+                            fieldName="password"
                             required
                             autoComplete="current-password"
-                            className="h-11 2xl:h-13 2xl:text-xl 2xl:px-6"
                             placeHolderName="••••••••"
                         />
+
 
                         <Button name={loading ? 'Kayıt Olunuyor…' : 'Kayıt Ol'} />
                     </form>

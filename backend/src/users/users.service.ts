@@ -15,13 +15,20 @@ export class UsersService {
         return this.userModel.findById(id).exec();
     }
 
-    async createUser(email: string, passwordHash: string) {
+    async createUser(
+        email: string,
+        passwordHash: string,
+        firstName: string,
+        lastName: string,
+    ) {
         const existing = await this.findByEmail(email);
         if (existing) throw new ConflictException('Email already in use');
 
         const created = await this.userModel.create({
             email: email.toLowerCase(),
             passwordHash,
+            firstName: firstName.trim(),
+            lastName: lastName.trim(),
         });
 
         return created;
