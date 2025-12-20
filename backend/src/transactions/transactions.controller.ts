@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Patch, UseGuards } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { JwtAuthGuard } from '../common/guards/jwt-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import type { CurrentUserPayload } from '../common/decorators/current-user.decorator';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
 
 @UseGuards(JwtAuthGuard)
@@ -31,4 +32,14 @@ export class TransactionsController {
     ) {
         return this.transactionsService.remove(user.userId, id);
     }
+
+    @Patch(':id')
+    update(
+        @Param('id') id: string,
+        @Body() dto: UpdateTransactionDto,
+        @CurrentUser() user: CurrentUserPayload,
+    ) {
+        return this.transactionsService.update(user.userId, id, dto);
+    }
+
 }

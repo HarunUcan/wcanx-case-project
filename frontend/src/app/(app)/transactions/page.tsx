@@ -10,6 +10,7 @@ import { FaPlus } from 'react-icons/fa6';
 import { transactionsService, TransactionDto } from '@/services/transactions.service';
 import type { Transaction } from '@/types/types';
 import ConfirmModal from '@/components/ui/ConfirmModal';
+import EditTransactionModal, { EditInitialData } from '@/components/transactions/EditTransactionModal';
 
 function formatDateTR(iso: string) {
     const d = new Date(iso);
@@ -25,6 +26,10 @@ function TransactionsPage() {
 
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [editing, setEditing] = useState<EditInitialData | null>(null);
+
 
     const loadTransactions = async () => {
         setLoading(true);
@@ -55,6 +60,33 @@ function TransactionsPage() {
         }
     };
 
+    const handleEditOpen = (id: string) => {
+        const t = raw.find((x) => x._id === id);
+        if (!t) return;
+
+        setEditing({
+            id: t._id,
+            type: t.type,          // 'income' | 'expense' (DTO ile uyumlu)
+            amount: t.amount,
+            category: t.category,
+            date: t.date.slice(0, 10), // ISO -> YYYY-MM-DD
+            note: t.note,
+        });
+
+        setIsEditOpen(true);
+    };
+
+    const handleEditSave = async (id: string, data: { type: 'income' | 'expense'; amount: number; category: string; date: string; note?: string }) => {
+        setError(null);
+        try {
+            await transactionsService.update(id, data);
+            await loadTransactions();
+        } catch (e: any) {
+            setError(e?.response?.data?.message ?? 'Güncelleme başarısız.');
+        }
+    };
+
+
 
     useEffect(() => {
         loadTransactions();
@@ -70,6 +102,7 @@ function TransactionsPage() {
                 id: t._id,
                 type,
                 category: t.category,
+                note: t.note,
                 date: formatDateTR(t.date),
                 amount,
             };
@@ -113,7 +146,7 @@ function TransactionsPage() {
 
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="font-semibold rounded-full px-6 bg-green-400 cursor-pointer h-12"
+                        className="font-semibold rounded-full px-6 bg-green-400 cursor-pointer h-12 shadow-md"
                     >
                         <span className="flex justify-center items-center gap-1">
                             <FaPlus />
@@ -133,7 +166,11 @@ function TransactionsPage() {
                 )}
 
                 <div className="mt-4 mb-20">
-                    <TransactionTable transactions={tableTransactions} onDelete={requestDelete} />
+                    <TransactionTable
+                        transactions={tableTransactions}
+                        onDelete={requestDelete}
+                        onEdit={handleEditOpen}
+                    />
                 </div>
 
                 <AddTransactionModal
@@ -155,6 +192,16 @@ function TransactionsPage() {
                     setPendingDeleteId(null);
                 }}
                 onConfirm={confirmDelete}
+            />
+
+            <EditTransactionModal
+                isOpen={isEditOpen}
+                onClose={() => {
+                    setIsEditOpen(false);
+                    setEditing(null);
+                }}
+                initialData={editing}
+                onSave={handleEditSave}
             />
 
         </Protected>

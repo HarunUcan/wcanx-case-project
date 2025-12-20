@@ -12,4 +12,5 @@ export type Transaction = {
     category: string;
     date: string;
     amount: number;
+    note?: string;
 }

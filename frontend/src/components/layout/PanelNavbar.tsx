@@ -1,9 +1,24 @@
+'use client'
 import Link from 'next/link';
 import React from 'react'
 import { MdLogout } from "react-icons/md";
 import { FaRegMoon } from "react-icons/fa";
+import { usePathname, useRouter } from 'next/navigation';
+import { authService } from '@/services/auth.service';
 
 function PanelNavbar() {
+    const router = useRouter();
+    const pathName = usePathname();
+
+    const handleLogout = () => {
+        authService.logout();
+        router.push('/login');
+    };
+
+    const isActive = (path: string) => {
+        return pathName.startsWith(path);
+    };
+
     return (
         <header>
             <nav className="bg-white border-b border-gray-200 px-8 lg:px-30 py-4 ">
@@ -15,8 +30,8 @@ function PanelNavbar() {
 
                     <div className=''>
                         <ul className='flex gap-8 font-semibold text-gray-800'>
-                            <li><Link href={"/dashboard"} className='text-gray-900 border-b-2 border-green-600 transition duration:300'>Dashboard</Link></li>
-                            <li><Link href={"/transactions"} className='hover:text-gray-900'>İşlemler</Link></li>
+                            <li><Link href={"/dashboard"} className={isActive('/dashboard') ? 'text-gray-900 border-b-2 border-green-600 transition duration:300' : 'hover:text-gray-900'}>Dashboard</Link></li>
+                            <li><Link href={"/transactions"} className={isActive('/transactions') ? 'text-gray-900 border-b-2 border-green-600 transition duration:300' : 'hover:text-gray-900'}>İşlemler</Link></li>
                         </ul>
                     </div>
 
@@ -31,9 +46,9 @@ function PanelNavbar() {
                         <button>
                             <FaRegMoon className='cursor-pointer' />
                         </button>
-                        <Link href={"/logout"}>
-                            <MdLogout className='text-xl hover:text-red-600 transition duration:200' />
-                        </Link>
+                        <button onClick={handleLogout}>
+                            <MdLogout className="text-xl hover:text-red-600 transition duration-200 cursor-pointer" />
+                        </button>
                     </div>
                 </div>
             </nav>

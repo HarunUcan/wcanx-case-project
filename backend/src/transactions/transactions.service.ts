@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Transaction, TransactionDocument } from './schemas/transaction.schema';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
 
 @Injectable()
 export class TransactionsService {
@@ -36,4 +37,33 @@ export class TransactionsService {
 
         await transaction.deleteOne();
     }
+
+    async update(
+        userId: string,
+        transactionId: string,
+        dto: UpdateTransactionDto,
+    ) {
+        const transaction = await this.transactionModel.findById(transactionId);
+
+        if (!transaction) {
+            throw new NotFoundException('Kayıt bulunamadı');
+        }
+
+        if (transaction.userId.toString() !== userId) {
+            throw new ForbiddenException('Bu kaydı güncelleme yetkiniz yok');
+        }
+
+        // Alan bazlı güncelleme
+        if (dto.type !== undefined) transaction.type = dto.type;
+        if (dto.category !== undefined) transaction.category = dto.category;
+        if (dto.amount !== undefined) transaction.amount = dto.amount;
+        if (dto.date !== undefined) transaction.date = new Date(dto.date);
+        if (dto.note !== undefined) transaction.note = dto.note;
+
+        await transaction.save();
+
+        return transaction;
+    }
+
+
 }

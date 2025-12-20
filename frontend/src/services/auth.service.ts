@@ -14,4 +14,9 @@ export const authService = {
         const res = await api.post<LoginResponse>('/auth/login', data);
         return res.data;
     },
+
+    logout() {
+        localStorage.removeItem('accessToken');
+    },
+
 };

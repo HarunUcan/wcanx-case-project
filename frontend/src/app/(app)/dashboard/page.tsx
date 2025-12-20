@@ -203,7 +203,7 @@ export default function DashboardPage() {
 
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="font-semibold rounded-full px-6 bg-green-400 cursor-pointer h-12"
+                        className="font-semibold rounded-full px-6 bg-green-400 cursor-pointer h-12 shadow-md"
                     >
                         <span className="flex justify-center items-center gap-1">
                             <FaPlus />
@@ -236,8 +236,8 @@ export default function DashboardPage() {
                 {/* Grafik Kartları */}
                 <div className="flex justify-center items-center gap-8 mt-12 mb-16">
                     <MonthlyIncomeExpenseCard
-                        title="Aylık Gelir vs Gider"
-                        subtitle="Seçili ayın karşılaştırması"
+                        title="Yıllık Gelir vs Gider"
+                        subtitle="Seçili yılın karşılaştırması"
                         chartData={yearlyChartData}
                         chartHeight={300}
                     />
