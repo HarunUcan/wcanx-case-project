@@ -19,10 +19,10 @@ function Input({
 }) {
     return (
         <div>
-            <label htmlFor={id} className="block text-sm/6 font-semibold text-gray-900">
+            <label htmlFor={id} className="block text-sm/6 font-semibold text-gray-900 2xl:text-xl">
                 {name}
             </label>
-            <div className="mt-2">
+            <div className="mt-2 2xl:mt-6">
                 <input
                     id={id}
                     type={type}

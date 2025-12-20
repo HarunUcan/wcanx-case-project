@@ -9,10 +9,6 @@ import {
     Tooltip,
     Label,
 } from "recharts";
-import type {
-    NameType,
-    ValueType,
-} from "recharts/types/component/DefaultTooltipContent";
 
 type Item = {
     name: string;
@@ -22,7 +18,7 @@ type Item = {
 
 type Props = {
     data: Item[];
-    currency?: string; // "₺"
+    currency?: string;
 };
 
 function formatMoneyTR(value: number, currency: string) {
@@ -39,10 +35,21 @@ export default function CategoryDonut({ data, currency = "₺" }: Props) {
 
     return (
         <div className="w-full bg-white rounded-2xl p-6">
-            <div className="flex items-center gap-4">
-                {/* CHART */}
-                <div className="w-[260px] h-[180px]">
-                    <ResponsiveContainer>
+            {/* justify-center: İçeriği ortalar.
+                gap-8: Grafik ve Legend arasındaki boşluğu sabitler.
+            */}
+            <div className="flex flex-col items-center lg:flex-row justify-center gap-8">
+
+                {/* CHART ALANI 
+                    ÖNEMLİ DEĞİŞİKLİK:
+                    w-full yerine sabit pixel değerleri verdik.
+                    w-[260px] -> Mobil
+                    lg:w-[300px] -> Laptop
+                    2xl:w-[360px] -> Büyük Ekran
+                    Böylece grafik kutusu gereksiz uzamaz ve legend uzaklaşmaz.
+                */}
+                <div className="relative w-[260px] h-[210px] lg:w-[300px] 2xl:w-[360px] 2xl:h-[360px]">
+                    <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
                                 data={data}
@@ -50,8 +57,8 @@ export default function CategoryDonut({ data, currency = "₺" }: Props) {
                                 nameKey="name"
                                 cx="50%"
                                 cy="50%"
-                                innerRadius={55}
-                                outerRadius={80}
+                                innerRadius="60%"
+                                outerRadius="80%"
                                 paddingAngle={2}
                                 startAngle={90}
                                 endAngle={-270}
@@ -70,22 +77,20 @@ export default function CategoryDonut({ data, currency = "₺" }: Props) {
                                             <g>
                                                 <text
                                                     x="50%"
-                                                    y="48%"
+                                                    y="46%"
                                                     textAnchor="middle"
                                                     dominantBaseline="middle"
-                                                    fontSize="12"
-                                                    fill="#6b7280"
+                                                    className="text-xs lg:text-sm 2xl:text-3xl fill-gray-500"
                                                 >
                                                     En Yüksek
                                                 </text>
                                                 <text
                                                     x="50%"
-                                                    y="58%"
+                                                    y="56%"
                                                     textAnchor="middle"
                                                     dominantBaseline="middle"
-                                                    fontSize="16"
-                                                    fontWeight="700"
                                                     fill={maxItem.color}
+                                                    className="text-sm lg:text-lg 2xl:text-2xl font-bold"
                                                 >
                                                     {maxItem.name}
                                                 </text>
@@ -94,35 +99,28 @@ export default function CategoryDonut({ data, currency = "₺" }: Props) {
                                     }}
                                 />
                             </Pie>
-
                             <Tooltip
-                                formatter={(
-                                    value: string | number | readonly (string | number)[] | undefined,
-                                    name: string | number | undefined
-                                ) => {
-                                    const raw = Array.isArray(value) ? value[0] : value;
-                                    const n = typeof raw === "number" ? raw : Number(raw ?? 0);
-
-                                    return [`${n.toLocaleString("tr-TR")} ₺`, String(name ?? "")];
+                                formatter={(value: any, name: any) => {
+                                    const n = Number(value);
+                                    return [`${n.toLocaleString("tr-TR")} ₺`, name];
                                 }}
                             />
-
                         </PieChart>
                     </ResponsiveContainer>
                 </div>
 
-                {/* LEGEND (right) */}
-                <div className="flex-1">
-                    <div className="grid grid-cols-2 gap-x-10 gap-y-4">
+                {/* LEGEND ALANI */}
+                <div className="flex-shrink-0">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-4">
                         {data.map((item) => (
-                            <div key={item.name} className="flex items-start gap-3">
+                            <div key={item.name} className="flex items-start gap-2">
                                 <span
-                                    className="mt-1 h-3 w-3 rounded-full"
+                                    className="mt-1.5 h-3 w-3 rounded-full flex-shrink-0"
                                     style={{ backgroundColor: item.color }}
                                 />
                                 <div className="leading-tight">
-                                    <div className="text-sm text-gray-600">{item.name}</div>
-                                    <div className="text-sm font-semibold text-gray-900">
+                                    <div className="text-xs lg:text-sm text-gray-500">{item.name}</div>
+                                    <div className="text-sm lg:text-base font-bold text-gray-800">
                                         {formatMoneyTR(item.value, currency)}
                                     </div>
                                 </div>

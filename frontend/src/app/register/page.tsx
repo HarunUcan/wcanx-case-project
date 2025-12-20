@@ -52,7 +52,7 @@ function RegisterPage() {
     };
 
     return (
-        <div className="flex min-h-full w-full lg:w-4/5 mx-auto mt-4 lg:border lg:border-green-950 rounded-4xl justify-center overflow-hidden">
+        <div className="flex min-h-full 2xl:my-auto bg-white shadow-lg 2xl:items-center w-full lg:w-4/5 mx-auto mt-4 lg:border lg:border-green-950 rounded-4xl justify-center overflow-hidden">
             <RegisterLeftArea />
             <div className="w-full lg:w-1/2 py-12">
                 <AuthHeader name="Hesap Oluştur" color="green" />
@@ -77,7 +77,10 @@ function RegisterPage() {
                             name="E-Posta"
                             required
                             autoComplete="email"
-                            className=""
+                            // 2xl:h-16 -> Input yüksekliği artırıldı
+                            // 2xl:text-xl -> Yazı boyutu büyütüldü
+                            // 2xl:px-6 -> Input iç boşluğu artırıldı
+                            className="h-11 2xl:h-13 2xl:text-xl 2xl:px-6"
                             placeHolderName="ex@example.com"
                         />
 
@@ -87,7 +90,7 @@ function RegisterPage() {
                             name="Şifre"
                             required
                             autoComplete="current-password"
-                            className=""
+                            className="h-11 2xl:h-13 2xl:text-xl 2xl:px-6"
                             placeHolderName="••••••••"
                         />
 

@@ -51,10 +51,12 @@ function LoginPage() {
     };
 
     return (
-        <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-            <AuthHeader name="Tekrar Hoşgeldiniz" color="green" />
+        <div className="flex min-h-screen flex-col justify-center py-12 px-6 lg:px-8 bg-gray-50 2xl:scale-120">
+            <div className="sm:mx-auto sm:w-full sm:max-w-md 2xl:max-w-[700px] 2xl:scale-150 2xl:origin-bottom 2xl:mb-6">
+                <AuthHeader name="Tekrar Hoşgeldiniz" color="green" />
+            </div>
 
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            <div className="mt-10 2xl:mt-16 sm:mx-auto sm:w-full sm:max-w-md 2xl:scale-125">
                 <form className="space-y-6" onSubmit={handleSubmit}>
                     {error && (
                         <div className="rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
@@ -62,30 +64,37 @@ function LoginPage() {
                         </div>
                     )}
 
-                    <Input
-                        id="email"
-                        type="email"
-                        name="E-Posta"
-                        required
-                        autoComplete="email"
-                        className=""
-                        placeHolderName="ex@example.com"
-                    />
+                    <div className='flex flex-col gap-6 2xl:gap-8'>
+                        <Input
+                            id="email"
+                            type="email"
+                            name="E-Posta"
+                            required
+                            autoComplete="email"
+                            // 2xl:h-16 -> Input yüksekliği artırıldı
+                            // 2xl:text-xl -> Yazı boyutu büyütüldü
+                            // 2xl:px-6 -> Input iç boşluğu artırıldı
+                            className="h-11 2xl:h-13 2xl:text-xl 2xl:px-6"
+                            placeHolderName="ex@example.com"
+                        />
 
-                    <Input
-                        id="password"
-                        type="password"
-                        name="Şifre"
-                        required
-                        autoComplete="current-password"
-                        className=""
-                        placeHolderName="••••••••"
-                    />
+                        <Input
+                            id="password"
+                            type="password"
+                            name="Şifre"
+                            required
+                            autoComplete="current-password"
+                            className="h-11 2xl:h-13 2xl:text-xl 2xl:px-6"
+                            placeHolderName="••••••••"
+                        />
+                    </div>
 
                     <Button name={loading ? 'Giriş Yapılıyor…' : 'Giriş Yap'} />
                 </form>
 
-                <AuthSwitch isLogin={true} />
+                <div className=''>
+                    <AuthSwitch isLogin={true} />
+                </div>
             </div>
         </div>
     );

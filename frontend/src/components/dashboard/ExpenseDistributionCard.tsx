@@ -34,16 +34,16 @@ export function ExpenseDistributionCard({
     const total = totalAmount ?? computedTotal;
 
     return (
-        <div className="flex flex-col items-between h-100 gap-6 w-1/2 shadow-[0px_8px_30px_8px_rgba(0,_0,_0,_0.1)] border border-gray-200 rounded-[50px] py-8">
+        <div className="flex flex-col bg-white items-between h-100 2xl:h-150 gap-6 lg:w-1/2 shadow-xl border border-gray-200 rounded-[50px] py-8">
             <div className="flex justify-between items-start px-12">
                 <div className="flex flex-col justify-center">
-                    <span className="font-bold text-xl text-gray-800">{title}</span>
-                    <span className="text-sm text-gray-600">{subtitle}</span>
+                    <span className="font-bold text-xl 2xl:text-3xl text-gray-800">{title}</span>
+                    <span className="text-sm 2xl:text-xl text-gray-600">{subtitle}</span>
                 </div>
 
                 <div className="flex flex-col justify-center">
-                    <span className="font-bold text-gray-400 text-sm">{totalLabel}</span>
-                    <span className="font-bold text-gray-800">
+                    <span className="font-bold text-gray-400 text-sm 2xl:text-2xl">{totalLabel}</span>
+                    <span className="font-bold text-gray-800 2xl:text-2xl">
                         {total.toLocaleString("tr-TR")}
                         {currencySymbol}
                     </span>
