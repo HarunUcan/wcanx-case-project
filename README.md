@@ -16,6 +16,7 @@ Proje Docker ve Docker Compose ile containerlaştırılmıştır ve tek komutla 
 - Servisler
 - Notlar
 - Case Gereksinim Kontrol Tablosu
+- Proje Görselleri
 
 ---
 
@@ -111,7 +112,7 @@ MONGO_URI=mongodb://root:rootpass@mongo:27017/wcanx_budget?authSource=admin
 NEXT_PUBLIC_API_URL=http://localhost:4000
 ```
 
-Bu dosya manuel olarak oluşturulmalıdır.
+⚠️ÖNEMLİ: Bu dosya manuel olarak 'frontend/.env.local' yoluna oluşturulmalıdır.
 
 ---
 
@@ -180,6 +181,23 @@ docker compose down
 | Aylık Filtreleme   | Ay/yıl bazlı veri filtreleme                  |   ✔   |
 | Dark / Light Mode  | Koyu & açık tema desteği                      |   ✔   |
 | Docker Kullanımı   | Docker & docker-compose entegrasyonu          |   ✔   |
+
+
+---
+
+
+## Proje Görselleri
+### Açık Tema
+<img width="1366" height="887" alt="screencapture-localhost-3000-dashboard-2025-12-21-02_56_33" src="https://github.com/user-attachments/assets/4e03c5c5-b273-46a2-be3b-c0fd40d07447" />
+<img width="1366" height="763" alt="screencapture-localhost-3000-register-2025-12-21-02_41_52" src="https://github.com/user-attachments/assets/81ff9461-e184-4d21-940f-85ebc89fc677" />
+<img width="1366" height="599" alt="screencapture-localhost-3000-login-2025-12-21-02_42_21" src="https://github.com/user-attachments/assets/15fc8b52-350e-4ff3-a476-37879601b75f" />
+<img width="1366" height="642" alt="screencapture-localhost-3000-transactions-2025-12-21-02_43_23" src="https://github.com/user-attachments/assets/b8773404-ca8d-4b5e-bfe7-20660c793f1f" />
+
+### Koyu Tema
+<img width="1366" height="887" alt="screencapture-localhost-3000-dashboard-2025-12-21-05_25_43" src="https://github.com/user-attachments/assets/c5569c9d-6a14-4b56-add8-a028efd6e88c" />
+<img width="1366" height="763" alt="screencapture-localhost-3000-register-2025-12-21-05_27_46" src="https://github.com/user-attachments/assets/13796277-b64a-4b4d-a3f4-275c876f8e2f" />
+<img width="1366" height="788" alt="screencapture-localhost-3000-transactions-2025-12-21-05_26_00" src="https://github.com/user-attachments/assets/fbd44945-f3ca-4eaf-acf1-4254af733203" />
+<img width="1366" height="599" alt="screencapture-localhost-3000-login-2025-12-21-05_27_23" src="https://github.com/user-attachments/assets/226508fa-1946-450c-b17a-358dcd13ba37" />
 
 
 ---
