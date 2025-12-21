@@ -100,9 +100,14 @@ cp .env.example .env
 Örnek içerik:
 
 ```env
+# Backend
 PORT=4000
 JWT_SECRET=super-secret-change-me
 JWT_EXPIRES_IN=86400
+JWT_REFRESH_SECRET=super-secret-refresh-change-me
+JWT_REFRESH_EXPIRES_IN=604800
+
+# Mongo (Docker içi)
 MONGO_URI=mongodb://root:rootpass@mongo:27017/wcanx_budget?authSource=admin
 ```
 
