@@ -32,10 +32,10 @@ const MonthPicker: React.FC<MonthPickerProps> = ({ initialDate = new Date(), onC
     };
 
     return (
-        <div className='flex justify-between bg-white items-center bg-gray-100 rounded-full w-48 2xl:w-70 px-2 h-12 2xl:h-16 shadow-sm'>
+        <div className='flex justify-between items-center bg-gray-100 rounded-full w-48 2xl:w-70 px-2 h-12 2xl:h-16 shadow-sm'>
             <button
                 onClick={() => changeMonth(-1)}
-                className='cursor-pointer font-semibold hover:bg-gray-200 w-10 h-10 2xl:text-2xl flex items-center justify-center rounded-full transition-all'
+                className='cursor-pointer font-semibold text-gray-800 hover:bg-gray-200 w-10 h-10 2xl:text-2xl flex items-center justify-center rounded-full transition-all'
                 aria-label="Önceki Ay"
             >
                 <IoIosArrowBack />
@@ -47,7 +47,7 @@ const MonthPicker: React.FC<MonthPickerProps> = ({ initialDate = new Date(), onC
 
             <button
                 onClick={() => changeMonth(1)}
-                className='cursor-pointer font-semibold hover:bg-gray-200 w-10 h-10 2xl:text-2xl flex items-center justify-center rounded-full transition-all'
+                className='cursor-pointer font-semibold text-gray-800 hover:bg-gray-200 w-10 h-10 2xl:text-2xl flex items-center justify-center rounded-full transition-all'
                 aria-label="Sonraki Ay"
             >
                 <IoIosArrowForward />

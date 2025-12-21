@@ -4,10 +4,10 @@ import React from 'react'
 function AuthSwitch({ isLogin }: { isLogin: boolean }) {
     return (
         <div>
-            <hr className="h-px w-3/5 mx-auto mt-8 bg-gray-300 border-0"></hr>
-            <p className="mt-6 text-center text-sm/6 2xl:text-lg text-gray-500">
+            <hr className="h-px w-3/5 mx-auto mt-8 bg-gray-300 dark:bg-gray-700 border-0"></hr>
+            <p className="mt-6 text-center text-sm/6 2xl:text-lg text-gray-500 dark:text-gray-400">
                 {isLogin ? 'Hesabın yok mu?' : 'Hesabın var mı?'}
-                <Link href={isLogin ? "/register" : "/login"} className="font-semibold text-green-600 hover:text-green-700 transition duration-200"> {isLogin ? 'Kayıt Ol' : 'Giriş Yap'}</Link>
+                <Link href={isLogin ? "/register" : "/login"} className="font-semibold text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 transition duration-200"> {isLogin ? 'Kayıt Ol' : 'Giriş Yap'}</Link>
             </p>
         </div>
 

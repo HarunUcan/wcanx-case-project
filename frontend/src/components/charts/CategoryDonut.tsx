@@ -34,7 +34,7 @@ export default function CategoryDonut({ data, currency = "₺" }: Props) {
     if (!data?.length) return null;
 
     return (
-        <div className="w-full bg-white rounded-2xl p-6">
+        <div className="w-full">
             {/* justify-center: İçeriği ortalar.
                 gap-8: Grafik ve Legend arasındaki boşluğu sabitler.
             */}
@@ -80,7 +80,7 @@ export default function CategoryDonut({ data, currency = "₺" }: Props) {
                                                     y="46%"
                                                     textAnchor="middle"
                                                     dominantBaseline="middle"
-                                                    className="text-xs lg:text-sm 2xl:text-3xl fill-gray-500"
+                                                    className="text-xs lg:text-sm 2xl:text-3xl fill-gray-500 dark:fill-gray-400"
                                                 >
                                                     En Yüksek
                                                 </text>
@@ -100,6 +100,7 @@ export default function CategoryDonut({ data, currency = "₺" }: Props) {
                                 />
                             </Pie>
                             <Tooltip
+                                contentStyle={{ borderRadius: "12px", border: "none", boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)" }}
                                 formatter={(value: any, name: any) => {
                                     const n = Number(value);
                                     return [`${n.toLocaleString("tr-TR")} ₺`, name];
@@ -119,8 +120,8 @@ export default function CategoryDonut({ data, currency = "₺" }: Props) {
                                     style={{ backgroundColor: item.color }}
                                 />
                                 <div className="leading-tight">
-                                    <div className="text-xs lg:text-sm text-gray-500">{item.name}</div>
-                                    <div className="text-sm lg:text-base font-bold text-gray-800">
+                                    <div className="text-xs lg:text-sm text-gray-500 dark:text-gray-400">{item.name}</div>
+                                    <div className="text-sm lg:text-base font-bold text-gray-800 dark:text-gray-200">
                                         {formatMoneyTR(item.value, currency)}
                                     </div>
                                 </div>

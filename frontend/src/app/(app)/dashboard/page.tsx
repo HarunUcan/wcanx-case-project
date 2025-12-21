@@ -195,15 +195,15 @@ export default function DashboardPage() {
                 {/* Üst Bilgi Alanı*/}
                 <div className="flex flex-col lg:flex-row justify-center items-center gap-4 lg:gap-0 lg:justify-between mt-8 2xl:mt-12">
                     <div className="flex flex-col items-center lg:items-start">
-                        <span className="text-center text-2xl 2xl:text-4xl font-bold text-gray-800">Finansal Durum</span>
-                        <span className="text-center text-gray-600 2xl:text-2xl">Bu ayki harcamalarının özeti</span>
+                        <span className="text-center text-2xl 2xl:text-4xl font-bold text-gray-800 dark:text-white">Finansal Durum</span>
+                        <span className="text-center text-gray-600 dark:text-gray-400 2xl:text-2xl">Bu ayki harcamalarının özeti</span>
                     </div>
 
                     <MonthPicker initialDate={selectedDate} onChange={(d) => setSelectedDate(d)} />
 
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="font-semibold rounded-full px-6 bg-green-400 cursor-pointer 2xl:w-70 h-12 2xl:h-16 shadow-md"
+                        className="font-semibold rounded-full px-6 bg-green-400 text-gray-900 cursor-pointer 2xl:w-70 h-12 2xl:h-16 shadow-md"
                     >
                         <span className="flex justify-center 2xl:text-2xl items-center gap-1">
                             <FaPlus />

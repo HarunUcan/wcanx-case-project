@@ -1,10 +1,8 @@
 'use client'
 import Link from 'next/link';
 import React, { useState } from 'react'
-import { MdLogout, MdMenu, MdClose } from "react-icons/md"; // Menu ikonları eklendi
-import { FaRegMoon } from "react-icons/fa";
-import { usePathname, useRouter } from 'next/navigation';
-import { authService } from '@/services/auth.service';
+import { MdMenu, MdClose } from "react-icons/md"; // Menu ikonları eklendi
+import { ThemeToggle } from '../ThemeToggle'; // Import Path adjusted based on file structure
 import NavigationButton from '../home/NavigationButton';
 
 function Navbar() {
@@ -12,7 +10,7 @@ function Navbar() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // Mobil menü durumu
 
     return (
-        <header className="bg-white 2xl:py-8 border-b border-gray-200 sticky top-0 z-50">
+        <header className="bg-white dark:bg-[#0f172a] 2xl:py-8 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50 transition-colors duration-300">
             <nav className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
 
@@ -24,7 +22,7 @@ function Navbar() {
                                 alt="WcanX Logo"
                                 className="h-8  2xl:h-16 w-auto"
                             />
-                            <span className="self-center text-xl  2xl:text-5xl font-semibold whitespace-nowrap text-gray-800 hidden sm:block">
+                            <span className="self-center text-xl  2xl:text-5xl font-semibold whitespace-nowrap text-gray-800 dark:text-white hidden sm:block">
                                 WcanX Case
                             </span>
                         </Link>
@@ -37,14 +35,14 @@ function Navbar() {
 
                         {/* ORTA TARAF: DESKTOP MENÜ (Mobilde gizlenir 'hidden md:block') */}
                         <div className="hidden md:block">
-                            <ul className='flex space-x-2 font-semibold text-gray-800'>
+                            <ul className='flex space-x-2 font-semibold text-gray-800 dark:text-gray-200'>
                                 <li>
                                     <NavigationButton className='sm:py-2.5' href="/register" variant="primary">
                                         Kayıt Ol
                                     </NavigationButton>
                                 </li>
                                 <li>
-                                    <NavigationButton className='sm:py-2.5' href="/register" variant="secondary">
+                                    <NavigationButton className='sm:py-2.5' href="/login" variant="secondary">
                                         Giriş Yap
                                     </NavigationButton>
                                 </li>
@@ -52,16 +50,14 @@ function Navbar() {
                         </div>
 
                         {/* Aksiyon Butonları */}
-                        <button className='p-1 rounded-full hover:bg-gray-100 transition'>
-                            <FaRegMoon className='text-gray-600 2xl:text-3xl' />
-                        </button>
+                        <ThemeToggle />
 
                         {/* Mobil Menü Açma Butonu (Sadece mobilde görünür 'md:hidden') */}
                         <div className="-mr-2 flex md:hidden">
                             <button
                                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                                 type="button"
-                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none"
+                                className="inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-500 focus:outline-none"
                             >
                                 <span className="sr-only">Menüyü aç</span>
                                 {isMobileMenuOpen ? (
@@ -78,18 +74,18 @@ function Navbar() {
 
             {/* MOBİL MENÜ İÇERİĞİ (State true ise görünür) */}
             {isMobileMenuOpen && (
-                <div className="md:hidden bg-white border-b border-gray-200">
+                <div className="md:hidden bg-white dark:bg-[#0f172a] border-b border-gray-200 dark:border-gray-800">
                     <div className="space-y-1 px-4 pb-3 pt-2 sm:px-3">
                         <Link
                             href="/register"
-                            className={`block rounded-md px-3 py-2 text-base font-medium`}
+                            className={`block rounded-md px-3 py-2 text-base font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800`}
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
                             Kayıt Ol
                         </Link>
                         <Link
                             href="/login"
-                            className={`block rounded-md px-3 py-2 text-base font-medium`}
+                            className={`block rounded-md px-3 py-2 text-base font-medium text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800`}
                             onClick={() => setIsMobileMenuOpen(false)}
                         >
                             Giriş Yap

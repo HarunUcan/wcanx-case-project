@@ -22,8 +22,8 @@ export default function NavigationButton({
 
     // Varyantlara göre değişen renk stilleri
     const variantStyles = {
-        primary: "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-200 hover:shadow-xl",
-        secondary: "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50",
+        primary: "bg-emerald-500 text-white hover:bg-emerald-600 shadow-lg shadow-emerald-200 dark:shadow-emerald-900/20 hover:shadow-xl",
+        secondary: "bg-white dark:bg-gray-800 text-slate-700 dark:text-gray-200 border border-slate-200 dark:border-gray-700 hover:bg-slate-50 dark:hover:bg-gray-700",
     };
 
     return (

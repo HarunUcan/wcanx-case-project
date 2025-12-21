@@ -18,37 +18,37 @@ type InfoCardProps = {
 function InfoCard({ title, amount, percentage, cardType }: InfoCardProps) {
     const config = {
         [CardType.INCOME]: {
-            cardBg: "bg-white",
-            iconWrapBg: "bg-green-200",
-            icon: <IoIosTrendingUp className="text-green-600 text-xl 2xl:text-5xl" />,
-            badgeBg: "bg-green-200",
-            badgeText: "text-green-600",
-            titleText: "text-gray-400 2xl:text-2xl",
-            amountText: "text-gray-900",
+            cardBg: "bg-white dark:bg-gray-800",
+            iconWrapBg: "bg-green-200 dark:bg-green-900/40",
+            icon: <IoIosTrendingUp className="text-green-600 dark:text-green-400 text-xl 2xl:text-5xl" />,
+            badgeBg: "bg-green-200 dark:bg-green-900/40",
+            badgeText: "text-green-600 dark:text-green-400",
+            titleText: "text-gray-400 dark:text-gray-400 2xl:text-2xl",
+            amountText: "text-gray-900 dark:text-white",
         },
         [CardType.EXPEND]: {
-            cardBg: "bg-white",
-            iconWrapBg: "bg-red-200",
-            icon: <IoIosTrendingDown className="text-red-600 text-xl 2xl:text-5xl" />,
-            badgeBg: "bg-red-200",
-            badgeText: "text-red-600",
-            titleText: "text-gray-400 2xl:text-2xl",
-            amountText: "text-gray-900",
+            cardBg: "bg-white dark:bg-gray-800",
+            iconWrapBg: "bg-red-200 dark:bg-red-900/40",
+            icon: <IoIosTrendingDown className="text-red-600 dark:text-red-400 text-xl 2xl:text-5xl" />,
+            badgeBg: "bg-red-200 dark:bg-red-900/40",
+            badgeText: "text-red-600 dark:text-red-400",
+            titleText: "text-gray-400 dark:text-gray-400 2xl:text-2xl",
+            amountText: "text-gray-900 dark:text-white",
         },
         [CardType.TOTAL]: {
-            cardBg: "bg-green-950",
-            iconWrapBg: "bg-green-300",
-            icon: <RiWallet3Line className="text-green-900 text-xl 2xl:text-5xl" />,
-            badgeBg: "bg-green-300",
-            badgeText: "text-green-900",
-            titleText: "text-green-300 2xl:text-2xl",
+            cardBg: "bg-green-950 dark:bg-green-900",
+            iconWrapBg: "bg-green-300 dark:bg-green-800",
+            icon: <RiWallet3Line className="text-green-900 dark:text-green-100 text-xl 2xl:text-5xl" />,
+            badgeBg: "bg-green-300 dark:bg-green-800",
+            badgeText: "text-green-900 dark:text-green-100",
+            titleText: "text-green-300 dark:text-green-200 2xl:text-2xl",
             amountText: "text-gray-100",
         },
     }[cardType];
 
     return (
         <div
-            className={`flex flex-col gap-6 w-full lg:w-1/3 shadow-xl border border-gray-200 rounded-[50px] px-12 py-4 2xl:py-16 ${config.cardBg}`}
+            className={`flex flex-col gap-6 w-full lg:w-1/3 shadow-xl dark:shadow-gray-700/40 border border-gray-200 dark:border-gray-700 rounded-[50px] px-12 py-4 2xl:py-16 ${config.cardBg}`}
         >
             <div className="flex justify-between items-center">
                 <div

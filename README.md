@@ -34,6 +34,7 @@ Tüm sistem Docker ortamında çalışacak şekilde yapılandırılmıştır.
 - React
 - Tailwind CSS
 - Recharts Grafik Kütüphanesi
+- Dark/Light Tema (next-themes)
 
 ### Backend
 - NestJS

@@ -22,7 +22,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, categories, onChange }) 
            2xl:rounded-[2rem] -> Köşeler daha fazla yuvarlandı.
            2xl:gap-8 -> Sağ ve sol blok arası mesafe açıldı.
         */
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between bg-white p-4 2xl:p-6 rounded-3xl 2xl:rounded-[2rem] border border-gray-100 shadow-sm w-full gap-4 2xl:gap-8">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between bg-white dark:bg-gray-800 p-4 2xl:p-6 rounded-3xl 2xl:rounded-[2rem] border border-gray-100 dark:border-gray-700 shadow-sm w-full gap-4 2xl:gap-8 transition-colors duration-300">
 
             {/* SOL TARAF (FİLTRELER):
                2xl:gap-6 -> Filtre elemanları arası boşluk artırıldı.
@@ -46,7 +46,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, categories, onChange }) 
                            2xl:pr-6 -> Sağ boşluk artırıldı.
                            2xl:text-lg -> Yazı büyütüldü.
                         */
-                        className="w-full lg:w-auto pl-10 2xl:pl-14 pr-4 2xl:pr-6 py-2 2xl:py-3.5 border border-gray-200 rounded-full text-sm 2xl:text-lg font-bold cursor-pointer outline-none focus:border-green-400 transition-colors"
+                        className="w-full lg:w-auto pl-10 2xl:pl-14 pr-4 2xl:pr-6 py-2 2xl:py-3.5 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-full text-sm 2xl:text-lg font-bold cursor-pointer outline-none focus:border-green-400 transition-colors"
                     />
                 </div>
 
@@ -61,7 +61,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, categories, onChange }) 
                        2xl:py-3.5 -> Yükseklik artırıldı.
                        2xl:text-lg -> Yazı büyütüldü.
                     */
-                    className="w-full lg:w-auto px-4 2xl:px-8 py-2 2xl:py-3.5 border border-gray-200 rounded-full text-sm 2xl:text-lg font-bold cursor-pointer outline-none focus:border-green-400 transition-colors appearance-none"
+                    className="w-full lg:w-auto px-4 2xl:px-8 py-2 2xl:py-3.5 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-full text-sm 2xl:text-lg font-bold cursor-pointer outline-none focus:border-green-400 transition-colors appearance-none"
                 >
                     <option value="all">Tür: Tümü</option>
                     <option value="income">Gelir</option>
@@ -77,7 +77,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, categories, onChange }) 
                             category: e.target.value === 'Tümü' ? null : e.target.value,
                         })
                     }
-                    className="w-full lg:w-auto px-4 2xl:px-8 py-2 2xl:py-3.5 border border-gray-200 rounded-full text-sm 2xl:text-lg font-bold cursor-pointer outline-none focus:border-green-400 transition-colors appearance-none"
+                    className="w-full lg:w-auto px-4 2xl:px-8 py-2 2xl:py-3.5 border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white rounded-full text-sm 2xl:text-lg font-bold cursor-pointer outline-none focus:border-green-400 transition-colors appearance-none"
                 >
                     {categories.map((cat) => (
                         <option key={cat} value={cat}>
@@ -105,7 +105,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, categories, onChange }) 
                        2xl:pl-16 -> İkon için yer açıldı.
                        2xl:text-lg -> Yazı büyütüldü.
                     */
-                    className="w-full pl-12 2xl:pl-16 pr-4 py-2.5 2xl:py-4 bg-gray-50/50 border border-gray-200 rounded-full text-sm 2xl:text-lg outline-none focus:border-blue-400 focus:bg-white transition-all placeholder:text-gray-400 font-medium"
+                    className="w-full pl-12 2xl:pl-16 pr-4 py-2.5 2xl:py-4 bg-gray-50/50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600 rounded-full text-sm 2xl:text-lg outline-none focus:border-blue-400 focus:bg-white dark:focus:bg-gray-700 transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500 font-medium text-gray-800 dark:text-white"
                 />
             </div>
 

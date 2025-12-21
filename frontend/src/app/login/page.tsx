@@ -51,7 +51,7 @@ function LoginPage() {
     };
 
     return (
-        <div className="flex min-h-screen flex-col justify-center py-12 px-6 lg:px-8 bg-gray-50 2xl:scale-120">
+        <div className="flex min-h-screen flex-col justify-center py-12 px-6 lg:px-8 bg-gray-50 dark:bg-background 2xl:scale-120 transition-colors duration-300">
             <div className="sm:mx-auto sm:w-full sm:max-w-md 2xl:max-w-[700px] 2xl:scale-150 2xl:origin-bottom 2xl:mb-6">
                 <AuthHeader name="Tekrar Hoşgeldiniz" color="green" />
             </div>

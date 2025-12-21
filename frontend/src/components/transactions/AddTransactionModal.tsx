@@ -72,15 +72,15 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
 
     return (
         // Overlay
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4 transition-all">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/60 backdrop-blur-sm p-4 transition-all">
 
             {/* Modal Container */}
-            <div className="bg-white w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden relative animate-in fade-in zoom-in duration-200">
+            <div className="bg-white dark:bg-gray-800 w-full max-w-lg rounded-3xl shadow-2xl overflow-hidden relative animate-in fade-in zoom-in duration-200">
 
                 {/* Kapatma Butonu */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 cursor-pointer text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute top-4 right-4 cursor-pointer text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
                 >
                     <LuX size={24} />
                 </button>
@@ -88,12 +88,12 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
                 <div className="p-8">
 
                     {/* Gelir / Gider Tabları */}
-                    <div className="flex bg-gray-100 p-1 rounded-full mb-8">
+                    <div className="flex bg-gray-100 dark:bg-gray-700/50 p-1 rounded-full mb-8">
                         <button
                             onClick={() => setType('expense')}
                             className={`flex-1 flex items-center justify-center gap-2 py-3 cursor-pointer rounded-full text-sm font-bold transition-all duration-300 ${type === 'expense'
                                 ? 'bg-red-500 text-white shadow-md'
-                                : 'text-gray-500 hover:text-gray-700'
+                                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                                 }`}
                         >
                             <LuTrendingDown size={18} />
@@ -103,7 +103,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
                             onClick={() => setType('income')}
                             className={`flex-1 flex items-center justify-center gap-2 py-3 cursor-pointer rounded-full text-sm font-bold transition-all duration-300 ${type === 'income'
                                 ? 'bg-emerald-500 text-white shadow-md'
-                                : 'text-gray-500 hover:text-gray-700'
+                                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
                                 }`}
                         >
                             <LuTrendingUp size={18} />
@@ -116,7 +116,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
 
                         {/* Tutar Alanı */}
                         <div>
-                            <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Tutar</label>
+                            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Tutar</label>
                             <div className="relative">
                                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-2xl font-bold text-gray-400">₺</span>
                                 <input
@@ -124,7 +124,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
                                     value={amount}
                                     onChange={(e) => setAmount(e.target.value)}
                                     placeholder="0.00"
-                                    className="w-full pl-10 pr-4 py-4 text-3xl font-bold text-gray-800 border border-gray-200 rounded-2xl outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-gray-300"
+                                    className="w-full pl-10 pr-4 py-4 text-3xl font-bold text-gray-800 dark:text-white bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl outline-none focus:border-emerald-500 focus:ring-4 focus:ring-emerald-500/10 transition-all placeholder:text-gray-300 dark:placeholder:text-gray-500"
                                 />
                             </div>
                         </div>
@@ -133,9 +133,9 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
                         <div className="grid grid-cols-2 gap-4">
                             {/* Kategori Alanı */}
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Kategori</label>
+                                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Kategori</label>
                                 <div className="relative">
-                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
                                         <LuShapes size={20} />
                                     </div>
 
@@ -145,7 +145,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
                                         <select
                                             value={category}
                                             onChange={(e) => setCategory(e.target.value)}
-                                            className="w-full pl-12 pr-8 py-3.5 cursor-pointer bg-white border border-gray-200 rounded-2xl text-gray-700 font-semibold outline-none focus:border-emerald-500 transition-all appearance-none"
+                                            className="w-full pl-12 pr-8 py-3.5 cursor-pointer bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl text-gray-700 dark:text-gray-200 font-semibold outline-none focus:border-emerald-500 transition-all appearance-none"
                                         >
                                             <option value="" disabled>Seçiniz</option>
                                             {categories.map((cat) => (
@@ -161,7 +161,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
                                             value={category}
                                             onChange={(e) => setCategory(e.target.value)}
                                             placeholder="Yeni kategori adı girin..."
-                                            className="w-full pl-12 pr-4 py-3.5 bg-white border border-gray-200 rounded-2xl text-gray-700 font-semibold outline-none focus:border-emerald-500 transition-all placeholder:text-gray-400 placeholder:text-sm placeholder:font-normal"
+                                            className="w-full pl-12 pr-4 py-3.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl text-gray-700 dark:text-gray-200 font-semibold outline-none focus:border-emerald-500 transition-all placeholder:text-gray-400 placeholder:text-sm placeholder:font-normal"
                                         />
                                     )}
 
@@ -187,7 +187,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
                                     />
                                     <label
                                         htmlFor="customCategory"
-                                        className="text-xs font-medium text-gray-500 cursor-pointer select-none hover:text-gray-700"
+                                        className="text-xs font-medium text-gray-500 dark:text-gray-400 cursor-pointer select-none hover:text-gray-700 dark:hover:text-gray-300"
                                     >
                                         Özel Kategori
                                     </label>
@@ -196,16 +196,16 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
 
                             {/* Tarih */}
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Tarih</label>
+                                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Tarih</label>
                                 <div className="relative">
-                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400">
                                         <LuCalendar size={20} />
                                     </div>
                                     <input
                                         type="date"
                                         value={date}
                                         onChange={(e) => setDate(e.target.value)}
-                                        className="w-full pl-12 pr-4 py-3.5 cursor-pointer bg-white border border-gray-200 rounded-2xl text-gray-700 font-semibold outline-none focus:border-emerald-500 transition-all"
+                                        className="w-full pl-12 pr-4 py-3.5 cursor-pointer bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-2xl text-gray-700 dark:text-gray-200 font-semibold outline-none focus:border-emerald-500 transition-all [color-scheme:light] dark:[color-scheme:dark]"
                                     />
                                 </div>
                             </div>
@@ -213,7 +213,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
 
                         {/* Açıklama */}
                         <div>
-                            <label className="block text-xs font-bold text-gray-500 uppercase mb-2">
+                            <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">
                                 Açıklama <span className="text-gray-300 font-normal normal-case">(İsteğe bağlı)</span>
                             </label>
                             <textarea
@@ -221,7 +221,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="Not ekleyin..."
                                 rows={3}
-                                className="w-full p-4 border border-gray-200 rounded-2xl text-sm font-medium outline-none focus:border-emerald-500 transition-all resize-none placeholder:text-gray-400"
+                                className="w-full p-4 border border-gray-200 dark:border-gray-600 dark:bg-gray-700 rounded-2xl text-sm font-medium dark:text-gray-200 outline-none focus:border-emerald-500 transition-all resize-none placeholder:text-gray-400"
                             />
                         </div>
                     </div>
@@ -230,7 +230,7 @@ const AddTransactionModal: React.FC<AddTransactionModalProps> = ({ isOpen, onClo
                     <div className="flex items-center gap-4 mt-8">
                         <button
                             onClick={onClose}
-                            className="flex-1 py-3.5 cursor-pointer rounded-full border border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition-colors"
+                            className="flex-1 py-3.5 cursor-pointer rounded-full border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 font-bold hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                         >
                             İptal
                         </button>

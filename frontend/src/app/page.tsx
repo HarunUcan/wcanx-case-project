@@ -7,7 +7,6 @@ import NavigationButton from "@/components/home/NavigationButton";
 export default function Home() {
 
   // Kart verilerini burada tanımlıyoruz. 
-  // İleride burayı bir API'den veya çeviri dosyasından da çekebilirsin.
   const features = [
     {
       id: 1,
@@ -30,7 +29,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-50 font-sans text-slate-900">
+    <div className="flex min-h-screen flex-col bg-zinc-50 dark:bg-background font-sans text-slate-900 dark:text-foreground transition-colors duration-300">
       <Navbar />
 
       <main className="w-full flex-1">
@@ -38,14 +37,14 @@ export default function Home() {
         {/* --- HERO SECTION --- */}
         <section className="container mx-auto px-4 py-16 md:py-24 lg:py-32">
           <div className="flex flex-col items-center text-center lg:text-left lg:items-center mx-auto lg:mx-0">
-            <h1 className="text-4xl text-center md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-slate-900">
+            <h1 className="text-4xl text-center md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.15] text-slate-900 dark:text-white">
               Gelir ve giderlerini <br className="hidden lg:block" />
               <span className="relative inline-block">
                 <span className="relative z-10 text-emerald-600">kolayca takip et</span>
               </span>
             </h1>
 
-            <p className="mt-6 text-lg text-center text-slate-600 max-w-2xl leading-relaxed">
+            <p className="mt-6 text-lg text-center text-slate-600 dark:text-gray-400 max-w-2xl leading-relaxed">
               Paranızı yönetmenin en akıllı yolu. Harcamalarınızı kontrol altına alın,
               bütçenizi oluşturun ve tasarruf hedeflerinize daha hızlı ulaşın.
             </p>
@@ -63,17 +62,17 @@ export default function Home() {
         </section>
 
         {/* --- FEATURES SECTION --- */}
-        <section className="py-20 bg-zinc-50">
+        <section className="py-20 bg-zinc-50 dark:bg-background">
           <div className="container mx-auto px-4">
 
             <div className="text-center max-w-2xl mx-auto mb-16">
-              <span className="inline-block py-1 px-3 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold tracking-wider uppercase mb-4">
+              <span className="inline-block py-1 px-3 rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-xs font-bold tracking-wider uppercase mb-4">
                 Özellikler
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
                 Neden WcanX Case?
               </h2>
-              <p className="text-slate-500 leading-relaxed">
+              <p className="text-slate-500 dark:text-gray-400 leading-relaxed">
                 Finansal özgürlüğünüze giden yolda size yardımcı olacak özellikler.
                 Karmaşık tablolarla uğraşmayın, her şey net ve anlaşılır.
               </p>
@@ -96,7 +95,7 @@ export default function Home() {
 
         {/* --- Alt Section --- */}
         <section className="container mx-auto px-4 py-20">
-          <div className="bg-slate-900 rounded-[2.5rem] p-8 md:p-16 text-center relative overflow-hidden shadow-2xl">
+          <div className="bg-slate-900 dark:bg-black/40 dark:border dark:border-gray-800 rounded-[2.5rem] p-8 md:p-16 text-center relative overflow-hidden shadow-2xl">
             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-slate-800 to-slate-950 opacity-50 z-0"></div>
 
             <div className="relative z-10 max-w-3xl mx-auto">
