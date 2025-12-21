@@ -10,8 +10,8 @@
 }
 
 .dark {
-  /* Radial gradient from dark blue (top/center) to deep emerald green (bottom/outer) */
-  --background: radial-gradient(circle at 50% 0%, #0f172a 0%, #022c22 100%);
+  /* gradyan siyah arkaplan */
+  --background: radial-gradient(circle at 50% 0%, #1a1a1a 0%, #000000 100%);
   --foreground: #ededed;
 }
 

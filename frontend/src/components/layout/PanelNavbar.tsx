@@ -128,7 +128,7 @@ function PanelNavbar() {
 
             {/* MOBİL MENÜ İÇERİĞİ (State true ise görünür) */}
             {isMobileMenuOpen && (
-                <div className="md:hidden bg-white dark:bg-[#0f172a] border-b border-gray-200 dark:border-gray-800">
+                <div className="md:hidden bg-white dark:bg-[#1a1a1a] border-b border-gray-200 dark:border-gray-800">
                     <div className="space-y-1 px-4 pb-3 pt-2 sm:px-3">
                         <Link
                             href="/dashboard"
