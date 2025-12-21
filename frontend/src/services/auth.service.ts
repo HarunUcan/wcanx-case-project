@@ -2,7 +2,7 @@ import { api } from './api';
 
 export type RegisterRequest = { email: string; password: string; firstName: string; lastName: string; };
 export type LoginRequest = { email: string; password: string; };
-export type LoginResponse = { accessToken: string };
+export type LoginResponse = { accessToken: string; refreshToken: string; };
 export type RegisterResponse = { id: string; email: string; firstName: string; lastName: string; };
 
 export const authService = {
@@ -15,8 +15,19 @@ export const authService = {
         return res.data;
     },
 
-    logout() {
+    async refreshToken(token: string) {
+        const res = await api.post<LoginResponse>('/auth/refresh', { refreshToken: token });
+        return res.data;
+    },
+
+    async logout() {
+        try {
+            await api.post('/auth/logout');
+        } catch (error) {
+            // ignore error
+        }
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
     },
 
 };

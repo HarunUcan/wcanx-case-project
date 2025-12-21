@@ -33,4 +33,7 @@ export class UsersService {
 
         return created;
     }
+    async updateRefreshToken(userId: string, refreshTokenHash: string | null) {
+        await this.userModel.findByIdAndUpdate(userId, { refreshTokenHash });
+    }
 }

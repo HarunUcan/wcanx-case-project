@@ -11,7 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 
 function LoginPage() {
     const router = useRouter();
-    const { setToken, isAuthenticated, isReady } = useAuth();
+    const { setAuthToken, isAuthenticated, isReady } = useAuth();
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -41,7 +41,7 @@ function LoginPage() {
             }
 
             const res = await authService.login({ email, password });
-            setToken(res.accessToken);
+            setAuthToken(res);
             router.replace('/dashboard');
         } catch (err: any) {
             setError(err?.response?.data?.message ?? 'Giriş başarısız. Bilgilerinizi kontrol edin.');
