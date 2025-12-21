@@ -15,6 +15,7 @@ Proje Docker ve Docker Compose ile containerlaştırılmıştır ve tek komutla 
 - Docker ile Çalıştırma
 - Servisler
 - Notlar
+- Case Gereksinim Kontrol Tablosu
 
 ---
 
@@ -144,6 +145,42 @@ docker compose down
 - Proje Docker ortamında sorunsuz çalışır
 - Frontend .env.local dosyası zorunludur
 - MongoDB verileri volume üzerinde saklanır
+
+---
+
+## Case Gereksinim Kontrol Tablosu
+
+### Gereksinimler
+
+| Gereksinim              | Açıklama                                      | Durum |
+| ----------------------- | --------------------------------------------- | :---: |
+| Kullanıcı Kaydı         | Kullanıcıların sisteme kayıt olabilmesi       |   ✔   |
+| Kullanıcı Girişi        | JWT tabanlı giriş sistemi                     |   ✔   |
+| JWT Authentication      | Kimlik doğrulama için JWT kullanımı           |   ✔   |
+| Şifre Güvenliği         | Şifrelerin bcrypt ile hash’lenmesi            |   ✔   |
+| Refresh Token Güvenliği | Refresh token'ın bcrypt ile hash’lenmesi      |   ✔   |
+| Protected Routes        | Yetkisiz erişimlerin engellenmesi             |   ✔   |
+| Gelir Ekleme            | Kullanıcıya ait gelir kaydı oluşturma         |   ✔   |
+| Gider Ekleme            | Kullanıcıya ait gider kaydı oluşturma         |   ✔   |
+| Kayıt Listeleme         | Kullanıcının kendi kayıtlarını görebilmesi    |   ✔   |
+| Kayıt Silme             | Gelir / gider kayıtlarını silebilme           |   ✔   |
+| Yetkilendirme           | Kullanıcı sadece kendi verilerine erişebilir  |   ✔   |
+| Dashboard               | Özet bilgilerin dashboard ekranında gösterimi |   ✔   |
+| Gelir / Gider Grafiği   | Aylık gelir–gider karşılaştırması             |   ✔   |
+| Kategori Bazlı Grafik   | Giderlerin kategori dağılımı                  |   ✔   |
+| Hata Yönetimi           | Temel exception & hata yönetimi               |   ✔   |
+
+
+### Opsiyonel (Ekstra) Gereksinimler
+
+| Gereksinim         | Açıklama                                      | Durum |
+| ------------------ | --------------------------------------------- | :---: |
+| Jeton Yenileme     | Access token süresi dolunca otomatik yenileme |   ✔   |
+| İşlem Düzenleme    | Gelir / gider kayıtlarını güncelleme          |   ✔   |
+| Aylık Filtreleme   | Ay/yıl bazlı veri filtreleme                  |   ✔   |
+| Dark / Light Mode  | Koyu & açık tema desteği                      |   ✔   |
+| Docker Kullanımı   | Docker & docker-compose entegrasyonu          |   ✔   |
+
 
 ---
 
