@@ -12,10 +12,11 @@ type InfoCardProps = {
     title: string;
     amount: number;
     percentage: string; // "+12%" gibi
+    percentageTooltip?: string; // hover açıklaması
     cardType: CardType;
 };
 
-function InfoCard({ title, amount, percentage, cardType }: InfoCardProps) {
+function InfoCard({ title, amount, percentage, percentageTooltip, cardType }: InfoCardProps) {
     const config = {
         [CardType.INCOME]: {
             cardBg: "bg-white dark:bg-gray-800",
@@ -46,22 +47,38 @@ function InfoCard({ title, amount, percentage, cardType }: InfoCardProps) {
         },
     }[cardType];
 
+    const showBadge = (percentage ?? "").trim().length > 0;
+
     return (
         <div
             className={`flex flex-col gap-6 w-full lg:w-1/3 shadow-xl dark:shadow-gray-700/40 border border-gray-200 dark:border-gray-700 rounded-[50px] px-12 py-4 2xl:py-16 ${config.cardBg}`}
         >
             <div className="flex justify-between items-center">
-                <div
-                    className={`flex justify-center items-center rounded-full w-12 2xl:w-20 h-12 2xl:h-20 ${config.iconWrapBg}`}
-                >
+                <div className={`flex justify-center items-center rounded-full w-12 2xl:w-20 h-12 2xl:h-20 ${config.iconWrapBg}`}>
                     {config.icon}
                 </div>
 
-                <div
-                    className={`flex justify-center items-center rounded-full text-[10px] p-1 w-10 ${config.badgeBg} ${config.badgeText}`}
-                >
-                    {percentage}
-                </div>
+                {showBadge ? (
+                    <div className="relative group">
+                        <div
+                            className={`flex justify-center items-center rounded-full text-[10px] 2xl:text-sm px-2 py-1 min-w-12 ${config.badgeBg} ${config.badgeText}`}
+                        >
+                            {percentage}
+                        </div>
+
+                        {/* Tooltip */}
+                        {percentageTooltip ? (
+                            <div
+                                className="pointer-events-none absolute right-0 top-full mt-2 whitespace-nowrap rounded-md bg-gray-900 px-3 py-2 text-xs text-white opacity-0 shadow-lg transition-opacity duration-150 group-hover:opacity-100"
+                            >
+                                {percentageTooltip}
+                                <div className="absolute -top-1 right-3 h-2 w-2 rotate-45 bg-gray-900" />
+                            </div>
+                        ) : null}
+                    </div>
+                ) : (
+                    <div className="w-10" />
+                )}
             </div>
 
             <div className="flex flex-col mt-2">

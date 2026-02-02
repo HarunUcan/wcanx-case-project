@@ -50,7 +50,12 @@ export function ExpenseDistributionCard({
                 </div>
             </div>
 
-            <CategoryDonut data={data} />
+            {data.length > 0 ? (
+                <CategoryDonut data={data} />) : (
+                <div className="flex justify-center items-center h-48 2xl:h-72">
+                    <span className="text-gray-400 dark:text-gray-500 text-sm xl:text-xl">Gösterilecek veri yok</span>
+                </div>
+            )}
         </div>
     );
 }

@@ -14,7 +14,8 @@ async function bootstrap() {
   );
 
   app.enableCors({
-    origin: 'http://localhost:3000',
+    // process.env.IP_ADDRESS ile dinamik olarak IP adresini ekliyoruz
+    origin: ['http://localhost:3000', process.env.IP_ADDRESS ? `http://${process.env.IP_ADDRESS}:3000` : ''],
     credentials: true,
   });
 

@@ -13,20 +13,24 @@ import { dashboardService } from '@/services/dashboard.service';
 import AddTransactionModal from '@/components/transactions/AddTransactionModal';
 import { transactionsService } from '@/services/transactions.service';
 
-const CATEGORY_COLORS = [
-    '#2fd37a',
-    '#3b82f6',
-    '#f59e0b',
-    '#ec4899',
-    '#64748b',
-    '#22c55e',
-    '#ef4444',
-];
+const CATEGORY_COLORS = ['#2fd37a', '#3b82f6', '#f59e0b', '#ec4899', '#64748b', '#22c55e', '#ef4444'];
+
+type Summary = {
+    totalIncome: number;
+    totalExpense: number;
+    balance: number;
+};
 
 function toYYYYMM(d: Date) {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, '0');
     return `${y}-${m}`;
+}
+
+function addMonths(date: Date, diff: number) {
+    const d = new Date(date);
+    d.setMonth(d.getMonth() + diff);
+    return d;
 }
 
 function formatMonthNameTR(yyyyMm: string) {
@@ -35,29 +39,36 @@ function formatMonthNameTR(yyyyMm: string) {
     return date.toLocaleDateString('tr-TR', { month: 'long' });
 }
 
+function formatPct(pct: number) {
+    const sign = pct > 0 ? '+' : '';
+    return `${sign}${pct.toFixed(1)}%`;
+}
+
+function pctChange(current: number, prev: number) {
+    if (prev === 0) {
+        if (current === 0) return '0%';
+        return 'Yeni'; // veya "—"
+    }
+    return formatPct(((current - prev) / prev) * 100);
+}
+
 export default function DashboardPage() {
     const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-    const [summary, setSummary] = useState<{
-        totalIncome: number;
-        totalExpense: number;
-        balance: number;
-    } | null>(null);
+    const [summary, setSummary] = useState<Summary | null>(null);
+    const [prevSummary, setPrevSummary] = useState<Summary | null>(null);
 
     // Yıllık seri
-    const [incomeExpenseRows, setIncomeExpenseRows] = useState<
-        Array<{ month: string; income: number; expense: number }>
-    >([]);
+    const [incomeExpenseRows, setIncomeExpenseRows] = useState<Array<{ month: string; income: number; expense: number }>>([]);
 
     // ExpenseDistributionCard -> DonutItem[] bekliyor (color zorunlu)
-    const [expenseByCategory, setExpenseByCategory] = useState<
-        Array<{ name: string; value: number; color: string }>
-    >([]);
+    const [expenseByCategory, setExpenseByCategory] = useState<Array<{ name: string; value: number; color: string }>>([]);
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const selectedMonth = useMemo(() => toYYYYMM(selectedDate), [selectedDate]);
+    const prevMonth = useMemo(() => toYYYYMM(addMonths(selectedDate, -1)), [selectedDate]);
     const selectedYear = useMemo(() => selectedDate.getFullYear(), [selectedDate]);
 
     // UI: "Seçili ayın karşılaştırması" -> summary'den tek bar üret
@@ -73,19 +84,11 @@ export default function DashboardPage() {
     }, [selectedMonth, summary]);
 
     const yearlyChartData = useMemo(() => {
-        // Gelen veriyi hızlı lookup için map'e çevir
         const byMonth = new Map<string, { income: number; expense: number }>();
-        for (const r of incomeExpenseRows) {
-            byMonth.set(r.month, { income: r.income ?? 0, expense: r.expense ?? 0 });
-        }
+        for (const r of incomeExpenseRows) byMonth.set(r.month, { income: r.income ?? 0, expense: r.expense ?? 0 });
 
-        // Seçili yılın 12 ayını üret (YYYY-01 ... YYYY-12)
-        const months = Array.from({ length: 12 }, (_, i) => {
-            const mm = String(i + 1).padStart(2, '0');
-            return `${selectedYear}-${mm}`;
-        });
+        const months = Array.from({ length: 12 }, (_, i) => `${selectedYear}-${String(i + 1).padStart(2, '0')}`);
 
-        // Her ay için veri varsa kullan, yoksa 0 bas
         return months.map((yyyyMm) => {
             const monthName = formatMonthNameTR(yyyyMm);
             const found = byMonth.get(yyyyMm);
@@ -98,6 +101,36 @@ export default function DashboardPage() {
         });
     }, [incomeExpenseRows, selectedYear]);
 
+    // Percentage (önceki aya göre)
+    const incomePct = useMemo(() => pctChange(summary?.totalIncome ?? 0, prevSummary?.totalIncome ?? 0), [
+        summary?.totalIncome,
+        prevSummary?.totalIncome,
+    ]);
+
+    const expensePct = useMemo(() => pctChange(summary?.totalExpense ?? 0, prevSummary?.totalExpense ?? 0), [
+        summary?.totalExpense,
+        prevSummary?.totalExpense,
+    ]);
+
+    const balancePct = useMemo(() => pctChange(summary?.balance ?? 0, prevSummary?.balance ?? 0), [
+        summary?.balance,
+        prevSummary?.balance,
+    ]);
+
+    // Tooltip textleri (hover’da gösterilecek)
+    const incomeTooltip = useMemo(
+        () => `Önceki aya göre değişim (${prevMonth} → ${selectedMonth})`,
+        [prevMonth, selectedMonth],
+    );
+    const expenseTooltip = useMemo(
+        () => `Önceki aya göre değişim (${prevMonth} → ${selectedMonth})`,
+        [prevMonth, selectedMonth],
+    );
+    const balanceTooltip = useMemo(
+        () => `Önceki aya göre değişim (${prevMonth} → ${selectedMonth})`,
+        [prevMonth, selectedMonth],
+    );
+
     useEffect(() => {
         let cancelled = false;
 
@@ -106,8 +139,9 @@ export default function DashboardPage() {
             setError(null);
 
             try {
-                const [s, yearly, byCat] = await Promise.all([
+                const [s, sPrev, yearly, byCat] = await Promise.all([
                     dashboardService.getSummary(selectedMonth),
+                    dashboardService.getSummary(prevMonth),
                     dashboardService.getIncomeExpense(selectedYear),
                     dashboardService.getExpenseByCategory(selectedMonth),
                 ]);
@@ -120,9 +154,14 @@ export default function DashboardPage() {
                     balance: s.balance,
                 });
 
+                setPrevSummary({
+                    totalIncome: sPrev.totalIncome,
+                    totalExpense: sPrev.totalExpense,
+                    balance: sPrev.balance,
+                });
+
                 setIncomeExpenseRows(yearly);
 
-                // color zorunlu: frontend'te garanti ediyoruz
                 setExpenseByCategory(
                     byCat.map((x, index) => ({
                         name: x.category,
@@ -142,11 +181,10 @@ export default function DashboardPage() {
         return () => {
             cancelled = true;
         };
-    }, [selectedMonth, selectedYear]);
+    }, [selectedMonth, prevMonth, selectedYear]);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Dashboard'dan işlem ekleme: POST + dashboard refresh
     const handleCreateTransaction = async (data: {
         type: 'expense' | 'income';
         amount: number;
@@ -155,16 +193,14 @@ export default function DashboardPage() {
         note?: string;
     }) => {
         setError(null);
+
         try {
             await transactionsService.create(data);
-
-            // ekleme başarılı -> modal kapat
             setIsModalOpen(false);
 
-            // verileri yenilemek için aynı load mantığını tekrar çalıştır:
-            // burada useEffect içindeki load'u kopyalamadan, kısa yoldan aynı 3 isteği tekrar atıyoruz
-            const [s, yearly, byCat] = await Promise.all([
+            const [s, sPrev, yearly, byCat] = await Promise.all([
                 dashboardService.getSummary(selectedMonth),
+                dashboardService.getSummary(prevMonth),
                 dashboardService.getIncomeExpense(selectedYear),
                 dashboardService.getExpenseByCategory(selectedMonth),
             ]);
@@ -173,6 +209,12 @@ export default function DashboardPage() {
                 totalIncome: s.totalIncome,
                 totalExpense: s.totalExpense,
                 balance: s.balance,
+            });
+
+            setPrevSummary({
+                totalIncome: sPrev.totalIncome,
+                totalExpense: sPrev.totalExpense,
+                balance: sPrev.balance,
             });
 
             setIncomeExpenseRows(yearly);
@@ -212,29 +254,42 @@ export default function DashboardPage() {
                     </button>
                 </div>
 
-                {error && (
-                    <div className="mt-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                        {error}
-                    </div>
-                )}
+                {error && <div className="mt-6 rounded-md border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</div>}
 
                 {/* Finansal Bilgi Kartları*/}
                 <div className="flex flex-col lg:flex-row gap-8 2xl:gap-16 mt-12 2xl:mt-16">
-                    <InfoCard title="Toplam Gelir" amount={summary?.totalIncome ?? 0} percentage="" cardType={CardType.INCOME} />
-                    <InfoCard title="Toplam Gider" amount={summary?.totalExpense ?? 0} percentage="" cardType={CardType.EXPEND} />
-                    <InfoCard title="Net Bakiye" amount={summary?.balance ?? 0} percentage="" cardType={CardType.TOTAL} />
+                    <InfoCard
+                        title="Toplam Gelir"
+                        amount={summary?.totalIncome ?? 0}
+                        percentage={incomePct}
+                        percentageTooltip={incomeTooltip}
+                        cardType={CardType.INCOME}
+                    />
+                    <InfoCard
+                        title="Toplam Gider"
+                        amount={summary?.totalExpense ?? 0}
+                        percentage={expensePct}
+                        percentageTooltip={expenseTooltip}
+                        cardType={CardType.EXPEND}
+                    />
+                    <InfoCard
+                        title="Net Bakiye"
+                        amount={summary?.balance ?? 0}
+                        percentage={balancePct}
+                        percentageTooltip={balanceTooltip}
+                        cardType={CardType.TOTAL}
+                    />
                 </div>
 
                 {/* Grafik Kartları */}
                 <div className="flex flex-col lg:flex-row gap-8 mt-12 2xl:mt-20 mb-16">
-                    <MonthlyIncomeExpenseCard
-                        title="Yıllık Gelir vs Gider"
-                        subtitle="Seçili yılın karşılaştırması"
-                        chartData={yearlyChartData}
-                        chartHeight={300}
-                    />
+                    <MonthlyIncomeExpenseCard title="Yıllık Gelir vs Gider" subtitle="Seçili yılın karşılaştırması" chartData={yearlyChartData} chartHeight={300} />
 
-                    <ExpenseDistributionCard title="Gider Dağılımı" subtitle="Kategorilere göre" data={expenseByCategory} />
+                    <ExpenseDistributionCard
+                        title={'Gider Dağılımı - ' + selectedDate.toLocaleDateString('tr-TR', { month: 'long', year: 'numeric' })}
+                        subtitle="Kategorilere göre"
+                        data={expenseByCategory}
+                    />
                 </div>
             </div>
 
